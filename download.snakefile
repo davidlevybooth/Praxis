@@ -34,7 +34,7 @@ rule all:
     input:
         # expand("genome/{genome_id}/{genome_id}_genomic_prokka.gbff",
         # genome_id=config["genomes"][config["genome_id"]]["url"].split("/")[-1]),
-        expand("genome/{genome_id}/{genome_id}_genomic.fna.gz",
+        expand("genome/{genome_id}/{genome_id}_genomic.fna",
         genome_id=config["genomes"][config["genome_id"]]["url"].split("/")[-1]),
 
         expand("transcriptome/reads/{sra_id}_1.untrimmed.fastq", sra_id = config["sample_ids"]),
@@ -47,12 +47,12 @@ rule download_genome:
     params:
         genome_url = config["genomes"][config["genome_id"]]["url"]
     output:
-        gff = "genome/{genome_id}/{genome_id}_genomic.gff.gz",
-        gbff = "genome/{genome_id}/{genome_id}_genomic.gbff.gz",
-        cd_fna = "genome/{genome_id}/{genome_id}_cds_from_genomic.fna.gz",
-        prep_gff = "genome/{genome_id}/{genome_id}_genomic_salmon.gff.gz",
-        prep_cd_fna = "genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna.gz",
-        fna = "genome/{genome_id}/{genome_id}_genomic.fna.gz"
+        gff = "genome/{genome_id}/{genome_id}_genomic.gff",
+        gbff = "genome/{genome_id}/{genome_id}_genomic.gbff",
+        cd_fna = "genome/{genome_id}/{genome_id}_cds_from_genomic.fna",
+        prep_gff = "genome/{genome_id}/{genome_id}_genomic_salmon.gff",
+        prep_cd_fna = "genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
+        fna = "genome/{genome_id}/{genome_id}_genomic.fna"
     log:
         "log/genome/{genome_id}.log"
     benchmark:
@@ -60,6 +60,7 @@ rule download_genome:
     run:
         shell("rsync --copy-links --recursive --times --verbose "
         "rsync://{params.genome_url} genome --log-file={log}")
+        shell("gunzip -r genome")
         shell("sed 's/locus_tag/gene_id/g' {output.gff} > {output.prep_gff}")
         shell("sed 's/.*\[locus_tag=\([^]]*\)\].*/>\1/g' {output.cd_fna} > {output.prep_cd_fna}")
 
