@@ -59,7 +59,7 @@ rule salmon_index:
         fasta=expand("genome/{base}/{base}_cds_from_genomic_salmon.fna", base = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
     output:
         directory("genome/salmon_quasi")
-    threads: 1
+    threads: THREADS
     run:
         shell("salmon index -t {input.fasta} -i {output} --type quasi -k 31")
 
@@ -71,7 +71,6 @@ rule salmon_quant:
     input:
         fastq_1="transcriptome/reads/{sra_id}_1.{trimmer}.fastq",
         fastq_2="transcriptome/reads/{sra_id}_2.{trimmer}.fastq",
-    params:
         salmon_dir = directory("genome/salmon_quasi")
     output:
         directory("transcriptome/salmon/{sra_id}_{trimmer}")
@@ -81,7 +80,7 @@ rule salmon_quant:
     benchmark:
         "benchmarks/salmon.quant.{sra_id}.{trimmer}.benchmark.txt"
     run:
-        shell("salmon quant -i {params.salmon_dir} -l A -p {threads} --validateMappings \
+        shell("salmon quant -i {input.salmon_dir} -l A -p {threads} --validateMappings \
         -1 {input.fastq_1} -2 {input.fastq_2} -o {output} 2 > {log}")
 
 

@@ -39,13 +39,13 @@ sample_geo: ["GSM3059620", "GSM3059621", "GSM3059622",
             "GSM3059623", "GSM3059624", "GSM3059625",
             "GSM3059626", "GSM3059627", "GSM3059628"]
 
-sample_ids: ["SRR6877528", "SRR6877529","SRR6877530",
-            "SRR6877531", "SRR6877532", "SRR6877533",
-            "SRR6877534", "SRR6877535", "SRR6877536"]
+# sample_ids: ["SRR6877528", "SRR6877529","SRR6877530",
+#             "SRR6877531", "SRR6877532", "SRR6877533",
+#             "SRR6877534", "SRR6877535", "SRR6877536"]
 
 #for testing
-# sample_ids: ["SRR6877529","SRR6877530",
-#             "SRR6877531"]
+sample_ids: ["SRR6877529","SRR6877530",
+            "SRR6877531"]
 
 
 transcriptomes:
@@ -75,6 +75,6 @@ max_reads: 50000
 salmon_quant: quasi
 
 #select tools
-METHOD: ["featureCounts", "htseq", "salmon"] # "featureCounts", "htseq", #salmon
-ALIGNER: ["bt2"] #"none" "bt2" "bbmap"
-TRIMMER: ["trimmomatic"] #bbduk , "trimmomatic" "untrimmed"
+METHOD: ["featureCounts", "salmon"] # "featureCounts", "htseq", #salmon
+ALIGNER: ["bt2", "bbmap"] #"none" "bt2" "bbmap"
+TRIMMER: ["trimmomatic", "bbduk"] #bbduk , "trimmomatic" "untrimmed"
