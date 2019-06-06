@@ -2,9 +2,6 @@
 
 """
 master.snakefile
-
-Snakemake workflow for downloading genome from NCBI and
-RNA-Seq files from SRA
 """
 
 __authors__ = "David Levy-Booth, Parker Lloyd"
@@ -28,3 +25,9 @@ rule all:
         # expand("transcriptome/reads/{sra_id}_2.untrimmed.fastq", sra_id = config["sample_ids"])
         # expand(count_out,
         # method=METHOD, aligner=ALIGNER, trimmer=TRIMMER)
+
+include: "download.snakefile"
+include: "index_align.snakefile"
+include: "quality_control.snakefile"
+include: "quantify.snakefile"
+#include: "deseq2.snakefile"
