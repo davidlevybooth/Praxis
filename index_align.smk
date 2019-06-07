@@ -5,13 +5,14 @@ TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 
-rule all:
-    input:
-        expand("intermediate/genome.{n}.bt2", n = ["1","2","3","4"]),
-        expand("intermediate/genome.rev.{n}.bt2", n = ["1","2"]),
-        expand("intermediate/{sra_id}.{trimmer}.{aligner}.sam", sra_id=config["sample_ids"], trimmer=TRIMMER, aligner=ALIGNER),
-        expand("intermediate/{sra_id}.{trimmer}.{aligner}.bam", sra_id=config["sample_ids"], trimmer=TRIMMER, aligner=ALIGNER),
-        expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam", sra_id=config["sample_ids"], trimmer=TRIMMER, aligner=ALIGNER)
+# rule all:
+#     input:
+#         expand("intermediate/genome.{n}.bt2", n = ["1","2","3","4"]),
+#         expand("intermediate/genome.rev.{n}.bt2", n = ["1","2"]),
+#         expand("intermediate/{sra_id}.{trimmer}.{aligner}.sam", sra_id=config["sample_ids"], trimmer=TRIMMER, aligner=ALIGNER),
+#         expand("intermediate/{sra_id}.{trimmer}.{aligner}.bam", sra_id=config["sample_ids"], trimmer=TRIMMER, aligner=ALIGNER),
+#         expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam", sra_id=config["sample_ids"], trimmer=TRIMMER, aligner=ALIGNER)
+
 
 rule bt2_index_genome:
     """

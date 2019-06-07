@@ -4,25 +4,20 @@ THREADS = config["threads"]
 TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
-if "salmon" in METHOD and len(METHOD) == 1:
-    count_out = "results/tables/salmon.{{trimmer}}.counts.tsv"
-if "salmon" in METHOD and len(METHOD) > 1:
-    METHOD.remove("salmon")
-    count_out = ["results/tables/salmon.{trimmer}.counts.tsv",
-    "results/tables/{method}.{aligner}.{trimmer}.counts.tsv"]
 
-rule all:
-    input:
-       expand("transcriptome/reads/{sra_id}_1.trimmomatic.fastq", sra_id = config["sample_ids"]),
-       expand("transcriptome/reads/{sra_id}_2.trimmomatic.fastq", sra_id = config["sample_ids"]),
-       expand("transcriptome/reads/{sra_id}_1.unpaired.fastq", sra_id = config["sample_ids"]),
-       expand("transcriptome/reads/{sra_id}_2.unpaired.fastq", sra_id = config["sample_ids"]),
-       expand("transcriptome/reads/{sra_id}_1.bbduk.fastq", sra_id = config["sample_ids"]),
-       expand("transcriptome/reads/{sra_id}_2.bbduk.fastq", sra_id = config["sample_ids"]),
-       expand("transcriptome/qc/fastqc/{trimmer}/{sra_id}_1.html", sra_id = config["sample_ids"], trimmer = TRIMMER),
-       expand("transcriptome/qc/fastqc/{trimmer}/{sra_id}_2.html", sra_id = config["sample_ids"], trimmer = TRIMMER),
-       expand(directory("transcriptome/qc/fastqc/{trimmer}/{sra_id}_1"), sra_id = config["sample_ids"], trimmer = TRIMMER),
-       expand(directory("transcriptome/qc/fastqc/{trimmer}/{sra_id}_2"), sra_id = config["sample_ids"], trimmer = TRIMMER)
+
+# rule all:
+#     input:
+#        expand("transcriptome/reads/{sra_id}_1.trimmomatic.fastq", sra_id = config["sample_ids"]),
+#        expand("transcriptome/reads/{sra_id}_2.trimmomatic.fastq", sra_id = config["sample_ids"]),
+#        expand("transcriptome/reads/{sra_id}_1.unpaired.fastq", sra_id = config["sample_ids"]),
+#        expand("transcriptome/reads/{sra_id}_2.unpaired.fastq", sra_id = config["sample_ids"]),
+#        expand("transcriptome/reads/{sra_id}_1.bbduk.fastq", sra_id = config["sample_ids"]),
+#        expand("transcriptome/reads/{sra_id}_2.bbduk.fastq", sra_id = config["sample_ids"]),
+#        expand("transcriptome/qc/fastqc/{trimmer}/{sra_id}_1.html", sra_id = config["sample_ids"], trimmer = TRIMMER),
+#        expand("transcriptome/qc/fastqc/{trimmer}/{sra_id}_2.html", sra_id = config["sample_ids"], trimmer = TRIMMER),
+#        expand(directory("transcriptome/qc/fastqc/{trimmer}/{sra_id}_1"), sra_id = config["sample_ids"], trimmer = TRIMMER),
+#        expand(directory("transcriptome/qc/fastqc/{trimmer}/{sra_id}_2"), sra_id = config["sample_ids"], trimmer = TRIMMER)
 
 
 rule trimmomatic:

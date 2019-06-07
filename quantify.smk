@@ -5,12 +5,13 @@ TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 
-rule all:
-    input:
-        expand("results/tables/featureCounts.{aligner}.{trimmer}.counts.tsv", trimmer = config["TRIMMER"], aligner = config["ALIGNER"]),
-        directory("genome/salmon_quasi"),
-        expand(directory("transcriptome/salmon/{sra_id}_{trimmer}"), sra_id=config["sample_ids"], trimmer = config["TRIMMER"]),
-        expand("results/tables/salmon.{trimmer}.counts.tsv", trimmer = config["TRIMMER"]),
+# rule all:
+#     input:
+#         expand("results/tables/featureCounts.{aligner}.{trimmer}.counts.tsv", trimmer = config["TRIMMER"], aligner = config["ALIGNER"]),
+#         directory("genome/salmon_quasi"),
+#         expand(directory("transcriptome/salmon/{sra_id}_{trimmer}"), sra_id=config["sample_ids"], trimmer = config["TRIMMER"]),
+#         expand("results/tables/salmon.{trimmer}.counts.tsv", trimmer = config["TRIMMER"]),
+
 
 rule htseq_count_table:
     """

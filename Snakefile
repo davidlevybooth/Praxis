@@ -1,30 +1,35 @@
 #!/usr/bin/env python
 
-"""
-master.snakefile
-
-Snakemake workflow for downloading genome from NCBI and
-RNA-Seq files from SRA
-"""
-
 __authors__ = "David Levy-Booth, Parker Lloyd"
 __copyright__ = "Copyright 2019, David Levy-Booth"
 __email__ = "dlevyboo@mail.ubc.ca"
 __license__ = "GPL3"
 
-include: 'snakefiles/download.snakefile'
+import os
+from pathlib import Path
+THREADS = config["threads"]
+TRIMMER = config["TRIMMER"]
+ALIGNER = config["ALIGNER"]
+METHOD = config["METHOD"]
+
+if "salmon" in METHOD and len(METHOD) == 1:
+    count_out = "results/tables/salmon.{{trimmer}}.counts.tsv"
+if "salmon" in METHOD and len(METHOD) > 1:
+    METHOD.remove("salmon")
+    count_out = ["results/tables/salmon.{trimmer}.counts.tsv",
+    "results/tables/{method}.{aligner}.{trimmer}.counts.tsv"]
+
 
 rule all:
     """
     Collect the main outputs of the workflow.
     """
     input:
-        # expand("genome/{genome_id}/{genome_id}_genomic_prokka.gbff",
-        # genome_id=config["genomes"][config["genome_id"]]["url"].split("/")[-1]),
-        expand("genome/{genome_id}/{genome_id}_genomic.fna.gz",
-        genome_id=config["genomes"][config["genome_id"]]["url"].split("/")[-1]),
+        "results/tables/salmon.trimmomatic.counts.tsv"
+        # expand(count_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER)
 
-        # expand("transcriptome/reads/{sra_id}_1.untrimmed.fastq", sra_id = config["sample_ids"]),
-        # expand("transcriptome/reads/{sra_id}_2.untrimmed.fastq", sra_id = config["sample_ids"])
-        # expand(count_out,
-        # method=METHOD, aligner=ALIGNER, trimmer=TRIMMER)
+include: "download.smk"
+include: "index_align.smk"
+include: "quality_control.smk"
+include: "quantify.smk"
+#include: "deseq2.smk"

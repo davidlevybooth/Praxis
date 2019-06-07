@@ -1,25 +1,24 @@
-rule count_matrix:
-    input:
-        expand("star/{unit.sample}-{unit.unit}/ReadsPerGene.out.tab", unit=units.itertuples())
-    output:
-        "counts/all.tsv"
-    params:
-        samples=units["sample"].tolist()
-    conda:
-        "../envs/pandas.yaml"
-    script:
-        "../scripts/count-matrix.py"
+# rule count_matrix:
+#     input:
+#         expand("star/{unit.sample}-{unit.unit}/ReadsPerGene.out.tab", unit=units.itertuples())
+#     output:
+#         "counts/all.tsv"
+#     params:
+#         samples=units["sample"].tolist()
+#     conda:
+#         "../envs/pandas.yaml"
+#     script:
+#         "../scripts/count-matrix.py"
 
 
 def get_deseq2_threads(wildcards=None):
-    # https://twitter.com/mikelove/status/918770188568363008
     few_coeffs = False if wildcards is None else len(get_contrast(wildcards)) < 10
     return 1 if len(samples) < 100 or few_coeffs else 6
 
 
 rule deseq2_init:
     input:
-        counts="counts/all.tsv"
+        counts=expand("results/tables/salmon.{trimmer}.counts.tsv", trimmer = config["TRIMMER"])
     output:
         "deseq2/all.rds"
     params:

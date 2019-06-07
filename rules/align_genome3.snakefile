@@ -151,7 +151,7 @@ rule bt2_index_genome:
         "benchmarks/{params.genome_base}.bt2.index.benchmark.txt"
     shell:
         """
-        bowtie2-build {input} intermediate/genome 2> {log}
+        bowtie2-build {input} intermediate/genome 2 > {log}
         """
 
 rule bt2_align:
