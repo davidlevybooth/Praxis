@@ -7,6 +7,7 @@ __license__ = "GPL3"
 
 import os
 from pathlib import Path
+
 THREADS = config["threads"]
 TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
@@ -26,10 +27,10 @@ rule all:
     """
     input:
         "results/tables/salmon.trimmomatic.counts.tsv"
-        # expand(count_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER)
+        #expand(count_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER)
 
-include: "download.smk"
-include: "index_align.smk"
-include: "quality_control.smk"
-include: "quantify.smk"
+include: "rules/download.smk"
+include: "rules/index_align.smk"
+include: "rules/quality_control.smk"
+include: "rules/quantify.smk"
 #include: "deseq2.smk"

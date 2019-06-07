@@ -18,12 +18,6 @@ THREADS = config["threads"]
 TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
-if "salmon" in METHOD and len(METHOD) == 1:
-    count_out = "results/tables/salmon.{{trimmer}}.counts.tsv"
-if "salmon" in METHOD and len(METHOD) > 1:
-    METHOD.remove("salmon")
-    count_out = ["results/tables/salmon.{trimmer}.counts.tsv",
-    "results/tables/{method}.{aligner}.{trimmer}.counts.tsv"]
 
 
 # rule all:
@@ -46,16 +40,16 @@ rule download_genome:
     params:
         genome_url = config["genomes"][config["genome_id"]]["url"]
     output:
-        gff = "../genome/{genome_id}/{genome_id}_genomic.gff",
-        gbff = "../genome/{genome_id}/{genome_id}_genomic.gbff",
-        cd_fna = "../genome/{genome_id}/{genome_id}_cds_from_genomic.fna",
-        prep_gff = "../genome/{genome_id}/{genome_id}_genomic_salmon.gff",
-        prep_cd_fna = "../genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
-        fna = "../genome/{genome_id}/{genome_id}_genomic.fna"
+        gff = "genome/{genome_id}/{genome_id}_genomic.gff",
+        gbff = "genome/{genome_id}/{genome_id}_genomic.gbff",
+        cd_fna = "genome/{genome_id}/{genome_id}_cds_from_genomic.fna",
+        prep_gff = "genome/{genome_id}/{genome_id}_genomic_salmon.gff",
+        prep_cd_fna = "genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
+        fna = "genome/{genome_id}/{genome_id}_genomic.fna"
     log:
-        "../log/genome/{genome_id}.log"
+        "log/genome/{genome_id}.log"
     benchmark:
-        "../benchmarks/{genome_id}.download.benchmark.txt"
+        "benchmarks/{genome_id}.download.benchmark.txt"
     run:
         shell("rsync --copy-links --recursive --times --verbose "
         "rsync://{params.genome_url} genome --log-file={log}")
@@ -70,13 +64,13 @@ rule get_SRA_by_accession:
     max_reads: Maximal number of reads to download for each sample.
     """
     output:
-        "../transcriptome/reads/{sra_id}_1.fastq",
-        "../transcriptome/reads/{sra_id}_2.fastq"
+        "transcriptome/reads/{sra_id}_1.fastq",
+        "transcriptome/reads/{sra_id}_2.fastq"
     params:
         max_reads = config["max_reads"]
     threads: THREADS
     benchmark:
-        "../benchmarks/{sra_id}.download.benchmark.txt"
+        "benchmarks/{sra_id}.download.benchmark.txt"
     shell:
         """
         fasterq-dump {wildcards.sra_id} -O transcriptome/reads --split-files -p
@@ -86,10 +80,10 @@ rule get_SRA_by_accession:
 
 rule rename_reads:
     input:
-        "../transcriptome/reads/{sra_id}_1.fastq",
-        "../transcriptome/reads/{sra_id}_2.fastq"
+        "transcriptome/reads/{sra_id}_1.fastq",
+        "transcriptome/reads/{sra_id}_2.fastq"
     output:
-        "../transcriptome/reads/{sra_id}_1.untrimmed.fastq",
-        "../transcriptome/reads/{sra_id}_2.untrimmed.fastq"
+        "transcriptome/reads/{sra_id}_1.untrimmed.fastq",
+        "transcriptome/reads/{sra_id}_2.untrimmed.fastq"
     run:
         shell("rename 's/.fastq/.untrimmed.fastq/' {input}")

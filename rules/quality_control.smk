@@ -27,18 +27,18 @@ if "salmon" in METHOD and len(METHOD) > 1:
 
 rule trimmomatic:
     input:
-        read1 = "../transcriptome/reads/{sra_id}_1.untrimmed.fastq",
-        read2 = "../transcriptome/reads/{sra_id}_2.untrimmed.fastq"
+        read1 = "transcriptome/reads/{sra_id}_1.untrimmed.fastq",
+        read2 = "transcriptome/reads/{sra_id}_2.untrimmed.fastq"
     output:
-       paired1 = "../transcriptome/reads/{sra_id}_1.trimmomatic.fastq",
-       paired2 = "../transcriptome/reads/{sra_id}_2.trimmomatic.fastq",
-       unpaired1 = "../transcriptome/reads/{sra_id}_1.unpaired.fastq",
-       unpaired2 = "../transcriptome/reads/{sra_id}_2.unpaired.fastq"
+       paired1 = "transcriptome/reads/{sra_id}_1.trimmomatic.fastq",
+       paired2 = "transcriptome/reads/{sra_id}_2.trimmomatic.fastq",
+       unpaired1 = "transcriptome/reads/{sra_id}_1.unpaired.fastq",
+       unpaired2 = "transcriptome/reads/{sra_id}_2.unpaired.fastq"
     threads: THREADS
     log:
-        "../log/{sra_id}.trimmomatic.log"
+        "log/{sra_id}.trimmomatic.log"
     benchmark:
-        "../benchmarks/{sra_id}.trimmomatic.benchmark.txt"
+        "benchmarks/{sra_id}.trimmomatic.benchmark.txt"
     shell:
       "trimmomatic PE -threads {threads} -phred33 "
       "{input.read1} {input.read2} {output.paired1} {output.unpaired1} {output.paired2} {output.unpaired2} "
@@ -46,16 +46,16 @@ rule trimmomatic:
 
 rule bbduk:
     input:
-        read1 = "../transcriptome/reads/{sra_id}_1.untrimmed.fastq",
-        read2 = "../transcriptome/reads/{sra_id}_2.untrimmed.fastq"
+        read1 = "transcriptome/reads/{sra_id}_1.untrimmed.fastq",
+        read2 = "transcriptome/reads/{sra_id}_2.untrimmed.fastq"
     output:
-       paired1 = "../transcriptome/reads/{sra_id}_1.bbduk.fastq",
-       paired2 = "../transcriptome/reads/{sra_id}_2.bbduk.fastq"
+       paired1 = "transcriptome/reads/{sra_id}_1.bbduk.fastq",
+       paired2 = "transcriptome/reads/{sra_id}_2.bbduk.fastq"
     threads: THREADS
     log:
-        "../log/{sra_id}.bbduk.log"
+        "log/{sra_id}.bbduk.log"
     benchmark:
-        "../benchmarks/{sra_id}.bbduk.benchmark.txt"
+        "benchmarks/{sra_id}.bbduk.benchmark.txt"
     shell:
         """
         bbduk.sh -Xmx20g t={threads} in1={input.read1} in2={input.read2} out1={output.paired1} out2={output.paired2} \
@@ -64,14 +64,14 @@ rule bbduk:
 
 rule fastqc:
     input:
-        "../transcriptome/reads/{sra_id}_{num}.{trimmer}.fastq"
+        "transcriptome/reads/{sra_id}_{num}.{trimmer}.fastq"
     output:
-        html="../transcriptome/qc/fastqc/{trimmer}/{sra_id}_{num}.html",
-        unzipped=directory("../transcriptome/qc/fastqc/{trimmer}/{sra_id}_{num}")
+        html="transcriptome/qc/fastqc/{trimmer}/{sra_id}_{num}.html",
+        unzipped=directory("transcriptome/qc/fastqc/{trimmer}/{sra_id}_{num}")
     params: ""
     wildcard_constraints:
         num="[1,2]"
     log:
-        "../log/fastqc/{trimmer}/{sra_id}_{num}.log"
+        "log/fastqc/{trimmer}/{sra_id}_{num}.log"
     script:
-        "../scripts/fastqc.py"
+        "scripts/fastqc.py"
