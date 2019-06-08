@@ -18,6 +18,8 @@ genomes:
 #Transcriptome alignment and quantification
 ##############################################################################
 
+samples: samples.tsv
+
 # List of SRA run ids to analyse
 # RREP4 RNA Reads
 # GEO ACC     SRA ACC     Sample Name
@@ -31,13 +33,13 @@ genomes:
 # GSM3059627 	SRR6877530  Succinate_2
 # GSM3059628 	SRR6877530  Succinate_3
 
-sample_name: ["Ethylphenol_1", "Ethylphenol_2", "Ethylphenol_3",
-             Propylguaiacol_1, Propylguaiacol_2, Propylguaiacol_3,
-             Succinate_1, Succinate_2, Succinate_3]
+#sample_name: ["Ethylphenol_1", "Ethylphenol_2", "Ethylphenol_3",
+#             Propylguaiacol_1, Propylguaiacol_2, Propylguaiacol_3,
+#             Succinate_1, Succinate_2, Succinate_3]
 
-sample_geo: ["GSM3059620", "GSM3059621", "GSM3059622",
-            "GSM3059623", "GSM3059624", "GSM3059625",
-            "GSM3059626", "GSM3059627", "GSM3059628"]
+#sample_geo: ["GSM3059620", "GSM3059621", "GSM3059622",
+#            "GSM3059623", "GSM3059624", "GSM3059625",
+#            "GSM3059626", "GSM3059627", "GSM3059628"]
 
 # sample_ids: ["SRR6877528", "SRR6877529","SRR6877530",
 #             "SRR6877531", "SRR6877532", "SRR6877533",
