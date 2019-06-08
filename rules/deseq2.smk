@@ -1,68 +1,69 @@
-# rule count_matrix:
-#     input:
-#         expand("star/{unit.sample}-{unit.unit}/ReadsPerGene.out.tab", unit=units.itertuples())
-#     output:
-#         "counts/all.tsv"
-#     params:
-#         samples=units["sample"].tolist()
-#     conda:
-#         "envs/pandas.yaml"
-#     script:
-#         "scripts/count-matrix.py"
+#!/usr/bin/env Rscript
 
+# D. Levy-Booth 2019-02-22
+# For use with snakemake
 
-def get_deseq2_threads(wildcards=None):
-    few_coeffs = False if wildcards is None else len(get_contrast(wildcards)) < 10
-    return 1 if len(samples) < 100 or few_coeffs else 6
+#Load Libraries
+##########################################################################################################
+write("Loading DESeq2", stdout())
+suppressMessages(library("DESeq2"))
 
+parallel <- FALSE
+if (snakemake@threads > 1) {
+    library("BiocParallel")
+    # setup parallelization
+    register(MulticoreParam(snakemake@threads))
+    parallel <- TRUE
+}
 
-rule deseq2_init:
-    input:
-        counts=expand("results/tables/salmon.{trimmer}.counts.tsv", trimmer = config["TRIMMER"])
-    output:
-        "deseq2/all.rds"
-    params:
-        samples=config["samples"]
-    conda:
-        "envs/deseq2.yaml"
-    log:
-        "logs/deseq2/init.log"
-    threads: get_deseq2_threads()
-    script:
-        "scripts/deseq2-init.R"
+#Init script
+##########################################################################################################
 
+# log <- file(snakemake@log[[1]], open="wt")
+# sink(log)
+# sink(log, type="message")
 
-rule pca:
-    input:
-        "deseq2/all.rds"
-    output:
-        report("results/pca.svg", "report/pca.rst")
-    params:
-        pca_labels=config["pca"]["labels"]
-    conda:
-        "envs/deseq2.yaml"
-    log:
-        "logs/pca.log"
-    script:
-        "scripts/plot-pca.R"
+##debug file type # looks okay
+##write.table(snakemake@input[["counts"]], "input.table.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
 
+#Load data
+##########################################################################################################
+counts <- read.table(snakemake@input[["counts"]], header=TRUE, row.names = 1, check.names=FALSE)
+coldata <- read.table(snakemake@params[["data"]], header=TRUE, check.names=FALSE)
+all_conditions <- snakemake@params[["contrasts"]]
+#Format data
+##########################################################################################################
+counts <- as.matrix(counts); mode(counts) <- "integer"
 
-def get_contrast(wildcards):
-    return config["diffexp"]["contrasts"][wildcards.contrast]
+cont_out <- strsplit(as.character(all_conditions),'_')
+cont_out <- data.frame(do.call(rbind, cont_out))
 
+#Init DESeq2
+##########################################################################################################
+dds <- DESeqDataSetFromMatrix(countData=counts,
+                              colData=coldata,
+                              design=~ Condition)
 
-rule deseq2:
-    input:
-        "deseq2/all.rds"
-    output:
-        table=report("results/diffexp/{contrast}.diffexp.tsv", "report/diffexp.rst"),
-        ma_plot=report("results/diffexp/{contrast}.ma-plot.svg", "report/ma.rst"),
-    params:
-        contrast=get_contrast
-    conda:
-        "envs/deseq2.yaml"
-    log:
-        "logs/deseq2/{contrast}.diffexp.log"
-    threads: get_deseq2_threads
-    script:
-        "scripts/deseq2.R"
+# remove uninformative columns
+dds <- dds[ rowSums(counts(dds)) > 1, ]
+# normalization and preprocessing
+write("Running DESeq2", stdout())
+dds <- DESeq(dds, parallel=parallel, quiet = TRUE)
+
+for(i in 1:nrow(cont_out)) {
+  c1 <- as.character(cont_out$X1[i])
+  c2 <- as.character(cont_out$X2[i])
+  write(" ", stdout())
+  write(paste("DeSeq2: Comparing ", c1, " and ", c2, sep = ""), stdout())
+
+  contrast <- c("Condition", c1, c2)
+  res <- results(dds, contrast=contrast, parallel=parallel)
+  res <- lfcShrink(dds, contrast=contrast, res=res)
+  res <- res[order(res$log2FoldChange),]
+
+  #build filename
+  table_file <- basename(snakemake@input[["counts"]])
+  table_file <-  gsub("counts", paste(c1, c2, sep = "_"), table_file)
+  write.table(as.data.frame(res), file=paste("results/tables/", table_file, sep = ""))
+  write.table(as.data.frame(res), file=snakemake@output[["tables"]][i])
+}
