@@ -10,7 +10,6 @@ METHOD = config["METHOD"]
 samples = pd.read_csv("samples.tsv", sep="\t")
 contrasts = list(itertools.combinations(set(samples["Condition"]), 2))
 contrasts = sorted(['_'.join(map(str,sorted(pair))) for pair in contrasts])
-print(contrasts)
 
 if "salmon" in METHOD and len(METHOD) == 1:
     count_out = "results/tables/salmon.{trimmer}.counts.tsv"
@@ -20,13 +19,6 @@ if "salmon" in METHOD and len(METHOD) > 1:
     count_out = ["results/tables/salmon.{trimmer}.counts.tsv",
     "results/tables/{method}.{aligner}.{trimmer}.counts.tsv"]
     DE_out = [table.replace("counts", "{contrasts}") for table in count_out]
-
-
-
-rule all:
-    input:
-        expand(DE_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER, contrasts = contrasts)
-
 
 rule deseq2:
     input:
@@ -43,4 +35,4 @@ rule deseq2:
     #    "log/deseq2.log"
     threads: 1
     script:
-        "scripts/deseq.R"
+        "../scripts/deseq.R"
