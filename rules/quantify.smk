@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-THREADS = config["threads"]
+THREADS = config["THREADS"]
 TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
@@ -82,7 +82,7 @@ rule salmon_quant:
         "benchmarks/salmon.quant.{sra_id}.{trimmer}.benchmark.txt"
     run:
         shell("salmon quant -i {input.salmon_dir} -l A -p {threads} --validateMappings \
-        -1 {input.fastq_1} -2 {input.fastq_2} -o {output} 2 > {log}")
+        -1 {input.fastq_1} -2 {input.fastq_2} -o {output} 2> {log}")
 
 
 rule salmon_quant_table:
@@ -91,4 +91,4 @@ rule salmon_quant_table:
     output:
         "results/tables/salmon.{trimmer}.counts.tsv"
     run:
-        shell("salmon quantmerge --quants {input} --column numreads  -o {output}")
+        shell("salmon quantmerge --quants {input} --column numreads -o {output}")

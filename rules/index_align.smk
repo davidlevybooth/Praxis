@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-THREADS = config["threads"]
+THREADS = config["THREADS"]
 TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
@@ -45,7 +45,7 @@ rule bt2_align:
     output:
         sam = temp("intermediate/{sra_id}.{trimmer}.bt2.sam"),
         bam = temp("intermediate/{sra_id}.{trimmer}.bt2.bam")
-    threads: config["threads"]
+    threads: THREADS
     log:
         "log/{sra_id}.{trimmer}.bt2.align.log"
     benchmark:

@@ -12,11 +12,12 @@ __license__ = "GPL3"
 
 import os
 from pathlib import Path
-THREADS = config["threads"]
+THREADS = config["THREADS"]
 TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 
+genome_url = config["genomes"][config["genome_id"]]["url"]
 
 # rule all:
 #     """
@@ -35,12 +36,11 @@ METHOD = config["METHOD"]
 
 
 rule download_genome:
-    params:
-        genome_url = config["genomes"][config["genome_id"]]["url"]
     output:
         gff = "genome/{genome_id}/{genome_id}_genomic.gff",
         gbff = "genome/{genome_id}/{genome_id}_genomic.gbff",
         cd_fna = "genome/{genome_id}/{genome_id}_cds_from_genomic.fna",
+        prep_gbff = "genome/{genome_id}/{genome_id}_genomic_prokka.gbff",
         prep_gff = "genome/{genome_id}/{genome_id}_genomic_salmon.gff",
         prep_cd_fna = "genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
         fna = "genome/{genome_id}/{genome_id}_genomic.fna"
@@ -49,11 +49,20 @@ rule download_genome:
     benchmark:
         "benchmarks/{genome_id}.download.benchmark.txt"
     run:
-        shell("rsync --copy-links --recursive --times --verbose "
-        "rsync://{params.genome_url} genome --log-file={log}")
-        shell("gunzip -r genome")
-        shell("sed 's/locus_tag/gene_id/g' {output.gff} > {output.prep_gff}")
-        shell("sed 's/.*\[locus_tag=\([^]]*\)\].*/>\1/g' {output.cd_fna} > {output.prep_cd_fna}")
+        try:
+            shell("rsync --copy-links --recursive --times --verbose "
+            "rsync://{genome_url} genome --log-file={log}")
+            shell("gunzip -r genome")
+            shell("sed 's/product/protein/g' {output.gbff} > {output.prep_gbff}")
+            shell("sed -i 's/locus_tag/product/g' {output.prep_gbff}")
+            shell("sed 's/locus_tag/gene_id/g' {output.gff} > {output.prep_gff}")
+            shell("sed 's/.*\[locus_tag=\([^]]*\)\].*/>\\1/g' {output.cd_fna} > {output.prep_cd_fna}")
+            touch("{output.fna}")
+        except Exception as e:
+            print(e.returncode)
+            if e.returncode == 23:
+                print("[ERROR]: Genome URL is possibly invalid or unspecified. Check URL in config file.")
+                raise
 
 
 rule get_SRA_by_accession:

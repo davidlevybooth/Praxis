@@ -2,7 +2,7 @@ import os
 import itertools
 import pandas as pd
 from pathlib import Path
-THREADS = config["threads"]
+THREADS = config["THREADS"]
 TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]

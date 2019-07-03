@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-THREADS = config["threads"]
+THREADS = config["THREADS"]
 TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
