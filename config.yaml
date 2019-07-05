@@ -4,9 +4,9 @@
 ###############################################################################
 #select tools
 METHOD: ["featureCounts", "salmon"]   # featureCounts, htseq, salmon
-ALIGNER: ["bt2", "bbmap"]             # none, bt2, bbmap
-TRIMMER: ["trimmomatic", "bbduk"]     # bbduk, trimmomatic, untrimmed
-ASSEMBLER: ["megahit", "trinity"]     # megahit, trinity
+ALIGNER: ["bt2"]             # none, bt2, bbmap
+TRIMMER: ["trimmomatic"]     # bbduk, trimmomatic, untrimmed
+ASSEMBLER: "megahit"     # megahit, trinity
 THREADS: 8
 
 #Genomic alignment and quantification
@@ -17,8 +17,8 @@ genome_id: RREP4
 # Dictionary with genomes that can be aligned against.
 genomes:
   RREP4:
-    url: 
-    #url: ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/004/765/GCF_003004765.2_ASM300476v2
+    url:
+    # url: ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/004/765/GCF_003004765.2_ASM300476v2
 
 
 #Transcriptome alignment and quantification

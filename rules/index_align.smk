@@ -4,79 +4,86 @@ THREADS = config["THREADS"]
 TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
+ASSEMBLER = config["ASSEMBLER"]
 
-# rule all:
-#     input:
-#         expand("intermediate/genome.{n}.bt2", n = ["1","2","3","4"]),
-#         expand("intermediate/genome.rev.{n}.bt2", n = ["1","2"]),
-#         expand("intermediate/{sra_id}.{trimmer}.{aligner}.sam", sra_id=config["sample_ids"], trimmer=TRIMMER, aligner=ALIGNER),
-#         expand("intermediate/{sra_id}.{trimmer}.{aligner}.bam", sra_id=config["sample_ids"], trimmer=TRIMMER, aligner=ALIGNER),
-#         expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam", sra_id=config["sample_ids"], trimmer=TRIMMER, aligner=ALIGNER)
+genome_url = config["genomes"][config["genome_id"]]["url"]
 
+reference = ""
+indexBase = ""
 
-rule bt2_index_genome:
-    """
-    Index a genome using Bowtie 2.
-    """
-    input:
-        expand("genome/{genome_base}/{genome_base}_genomic.fna",
-            genome_base = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
-    output:
-        expand("intermediate/genome.{n}.bt2", n = ["1","2","3","4"]),
-        expand("intermediate/genome.rev.{n}.bt2", n = ["1","2"])
-    log:
-        "log/index_genome.log"
-    benchmark:
-        "benchmarks/index_genome.bt2.index.benchmark.txt"
-    shell:
+# Select genome/transcriptome reference directories
+if genome_url:
+    reference = expand("genome/{genome_id}/{genome_id}_genomic.fna",
+        genome_id = genome_url.split("/")[-1])
+    indexBase = "intermediate/genome"
+else:
+    if ASSEMBLER=="megahit":
+        reference = "transcriptome/megahit_out/final.contigs.fa"
+        indexBase = "intermediate/megahit/transcriptome"
+    elif ASSEMBLER=="trinity":
+        reference = "transcriptome/trinity_out/Trinity.fasta"
+        indexBase = "intermediate/trinity/transcriptome"
+
+if "bt2" in ALIGNER:
+    rule bt2_index:
         """
-        bowtie2-build {input} intermediate/genome 2> {log}
+        Index a genome using Bowtie 2.
         """
+        input:
+            ref=reference
+        output:
+            expand("{indexBase}.{n}.bt2", indexBase = indexBase, n = ["1","2","3","4"]),
+            expand("{indexBase}.rev.{n}.bt2", indexBase = indexBase, n = ["1","2"])
+        log:
+            "log/index.log"
+        benchmark:
+            "benchmarks/index.bt2.index.benchmark.txt"
+        shell:
+            """
+            bowtie2-build {input} {indexBase} 2> {log}
+            """
 
-rule bt2_align:
-    """
-    Align a fastq file to a genome index using Bowtie 2.
-    """
-    input:
-        fastq_1 = "transcriptome/reads/{sra_id}_1.{trimmer}.fastq",
-        fastq_2 = "transcriptome/reads/{sra_id}_2.{trimmer}.fastq",
-        index = expand("intermediate/genome.{n}.bt2", n = ["1","2","3","4"]),
-        index_rev = expand("intermediate/genome.rev.{n}.bt2", n = ["1","2"])
-    output:
-        sam = temp("intermediate/{sra_id}.{trimmer}.bt2.sam"),
-        bam = temp("intermediate/{sra_id}.{trimmer}.bt2.bam")
-    threads: THREADS
-    log:
-        "log/{sra_id}.{trimmer}.bt2.align.log"
-    benchmark:
-        "benchmarks/{sra_id}.{trimmer}.bt2.align.benchmark.txt"
-    run:
-        # This gives the base name for the genome index, i.e. "intermediate/some_id"
-        # rather than "intermediate/some_id.*.bt2"
-        indexBase = "intermediate/genome"
-        shell("bowtie2 -x " + indexBase + " --threads {threads} -1 {input.fastq_1} -2 {input.fastq_2} -S {output.sam} 2> {log}")
-        shell("samtools view -bS {output.sam} > {output.bam}")
+    rule bt2_align:
+        """
+        Align a fastq file to a genome index using Bowtie 2.
+        """
+        input:
+            fastq_1 = "transcriptome/reads/{sra_id}_1.{trimmer}.fastq",
+            fastq_2 = "transcriptome/reads/{sra_id}_2.{trimmer}.fastq",
+            index = expand("{indexBase}.{n}.bt2", indexBase = indexBase, n = ["1","2","3","4"]),
+            index_rev = expand("{indexBase}.rev.{n}.bt2", indexBase = indexBase, n = ["1","2"])
+        output:
+            sam = temp("intermediate/{sra_id}.{trimmer}.bt2.sam"),
+            bam = temp("intermediate/{sra_id}.{trimmer}.bt2.bam")
+        threads: THREADS
+        log:
+            "log/{sra_id}.{trimmer}.bt2.align.log"
+        benchmark:
+            "benchmarks/{sra_id}.{trimmer}.bt2.align.benchmark.txt"
+        run:
+            shell("bowtie2 -x " + indexBase + " --threads {threads} -1 {input.fastq_1} -2 {input.fastq_2} -S {output.sam} 2> {log}")
+            shell("samtools view -bS {output.sam} > {output.bam}")
 
-rule bbmap_align:
-    params:
-        genome_base = config["genomes"][config["genome_id"]]["url"].split("/")[-1]
-    input:
-        fastq_1 = "transcriptome/reads/{sra_id}_1.{trimmer}.fastq",
-        fastq_2 = "transcriptome/reads/{sra_id}_2.{trimmer}.fastq",
-        genome = expand("genome/{genome_base}/{genome_base}_genomic.fna", genome_base=config["genomes"][config["genome_id"]]["url"].split("/")[-1])
-    output:
-        sam = temp("intermediate/{sra_id}.{trimmer}.bbmap.sam"),
-        bam = temp("intermediate/{sra_id}.{trimmer}.bbmap.bam")
-    threads: THREADS
-    log:
-        "log/{sra_id}.{trimmer}.bbmap.align.log"
-    benchmark:
-        "benchmarks/{sra_id}.{trimmer}.bbmap.align.benchmark.txt"
-    run:
-        shell("bbmap.sh -Xmx20g trimreaddescriptions=t threads={threads} in1={input.fastq_1} in2={input.fastq_2} \
-        out={output.sam} ref={input.genome}  path=genome/bbmap_index/ 2> {log}")
-        shell("samtools view -bS {output.sam} > {output.bam}")
-
+if "bbmap" in ALIGNER:
+    rule bbmap_align:
+        params:
+            genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1]
+        input:
+            fastq_1 = "transcriptome/reads/{sra_id}_1.{trimmer}.fastq",
+            fastq_2 = "transcriptome/reads/{sra_id}_2.{trimmer}.fastq",
+            genome = expand("genome/{genome_id}/{genome_id}_genomic.fna", genome_id=config["genomes"][config["genome_id"]]["url"].split("/")[-1])
+        output:
+            sam = temp("intermediate/{sra_id}.{trimmer}.bbmap.sam"),
+            bam = temp("intermediate/{sra_id}.{trimmer}.bbmap.bam")
+        threads: THREADS
+        log:
+            "log/{sra_id}.{trimmer}.bbmap.align.log"
+        benchmark:
+            "benchmarks/{sra_id}.{trimmer}.bbmap.align.benchmark.txt"
+        run:
+            shell("bbmap.sh -Xmx20g trimreaddescriptions=t threads={threads} in1={input.fastq_1} in2={input.fastq_2} \
+            out={output.sam} ref={input.genome}  path=genome/bbmap_index/ 2> {log}")
+            shell("samtools view -bS {output.sam} > {output.bam}")
 
 rule sort_bam:
     """

@@ -18,7 +18,6 @@ dependencies:
   - prodigal =2.6.3
   - blast =2.7.1
   - parallel =20181022
-  - prokka =1.13
   - salmon =0.12.0
   - trimmomatic =0.38
   - bbmap = 38.22

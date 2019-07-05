@@ -14,12 +14,11 @@ rule megahit_assemble:
         left = lambda input: ",".join(input[0]),
         right = lambda input: ",".join(input[1])
     output:
-        "transcriptome/assembler/megahit_align_stats.txt"
+        directory("transcriptome/assembled/megahit_out")
     shell:
         """
-        megahit -1 {params.left} -2 {params.right} -o {output} --k-list 25 --no-mercy --bubble-level 0 --prune-level 3 -m 300000000000
+        megahit -1 {params.left} -2 {params.right} --k-list 25 --no-mercy --bubble-level 0 --prune-level 3 -o {output} -m 300000000000
         """
-
 
 rule trinity_reformat_headers:
     input:
@@ -39,8 +38,26 @@ rule trinity_assemble:
         left = lambda wildcards, input: ",".join(input[0]),
         right = lambda wildcards, input: ",".join(input[1])
     output:
-        "transcriptome/assembler/trinity_align_stats.txt"
+        directory("transcriptome/assembled/trinity_out")
     shell:
         """
         Trinity --left {params.left} --right {params.right} -o {output} --max_memory 30G --CPU 6
         """
+
+def select_reference():
+    if ASSEMBLER=="megahit":
+        return "transcriptome/megahit_out/final.contigs.fa"
+    elif ASSEMBLER=="trinity":
+        return "transcriptome/trinity_out/Trinity.fasta"
+
+# rule annotate:
+#     input:
+#         assembly = select_reference
+#     output:
+#         gff = "genes.gff" #mapping file
+#         faa = "genes.faa" #protein file * this is what we'll need for annotation
+#         fna = "genes.fna" #nucleotide file* this is what we'll need for alignment/quantification
+#     shell:
+#         """
+#         prodigal -i {input.assembly} -f gff -o {output.gff} -a {output.faa} -d {output.fna}
+#         """
