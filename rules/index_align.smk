@@ -34,13 +34,15 @@ if "bt2" in ALIGNER:
         output:
             expand("{indexBase}.{n}.bt2", indexBase = indexBase, n = ["1","2","3","4"]),
             expand("{indexBase}.rev.{n}.bt2", indexBase = indexBase, n = ["1","2"])
+        params:
+            base = indexBase
         log:
             "log/index.log"
         benchmark:
             "benchmarks/index.bt2.index.benchmark.txt"
         shell:
             """
-            bowtie2-build {input} {indexBase} 2> {log}
+            bowtie2-build {input} {params.base} 2> {log}
             """
 
     rule bt2_align:
@@ -55,13 +57,15 @@ if "bt2" in ALIGNER:
         output:
             sam = temp("intermediate/{sra_id}.{trimmer}.bt2.sam"),
             bam = temp("intermediate/{sra_id}.{trimmer}.bt2.bam")
+        params:
+            base = indexBase
         threads: THREADS
         log:
             "log/{sra_id}.{trimmer}.bt2.align.log"
         benchmark:
             "benchmarks/{sra_id}.{trimmer}.bt2.align.benchmark.txt"
         run:
-            shell("bowtie2 -x " + indexBase + " --threads {threads} -1 {input.fastq_1} -2 {input.fastq_2} -S {output.sam} 2> {log}")
+            shell("bowtie2 -x " + params.base + " --threads {threads} -1 {input.fastq_1} -2 {input.fastq_2} -S {output.sam} 2> {log}")
             shell("samtools view -bS {output.sam} > {output.bam}")
 
 if "bbmap" in ALIGNER:
