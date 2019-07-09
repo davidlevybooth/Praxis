@@ -12,7 +12,7 @@ rule htseq_count_table:
     input:
         bams=expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam",
         sra_id = config["sample_ids"], trimmer = config["TRIMMER"], aligner = config["ALIGNER"]),
-        gff=expand("genome/{base}/{base}_genomic.gff", base = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
+        gff=expand("genome/{genome_id}/{genome_id}_genomic.gff", genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
     output:
         "results/tables/htseq.{aligner}.{trimmer}.counts.tsv"
     shadow: "minimal"
@@ -34,7 +34,7 @@ rule feature_counts_table:
     input:
         bams=expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam",
         sra_id = config["sample_ids"], trimmer = config["TRIMMER"], aligner = config["ALIGNER"]),
-        gff=expand("genome/{base}/{base}_genomic_salmon.gff", base = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
+        gff=expand("genome/{genome_id}/{genome_id}_genomic_salmon.gff", genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
     output:
         "results/tables/featureCounts.{aligner}.{trimmer}.counts.tsv"
     threads: THREADS
@@ -49,7 +49,7 @@ rule feature_counts_table:
 
 rule salmon_index:
     input:
-        fasta=expand("genome/{base}/{base}_cds_from_genomic_salmon.fna", base = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
+        fasta=expand("genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna", genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
     output:
         directory("genome/salmon_quasi")
     threads: THREADS

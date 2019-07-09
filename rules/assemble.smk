@@ -50,14 +50,16 @@ def select_reference():
     elif ASSEMBLER=="trinity":
         return "transcriptome/trinity_out/Trinity.fasta"
 
-# rule annotate:
-#     input:
-#         assembly = select_reference
-#     output:
-#         gff = "genes.gff" #mapping file
-#         faa = "genes.faa" #protein file * this is what we'll need for annotation
-#         fna = "genes.fna" #nucleotide file* this is what we'll need for alignment/quantification
-#     shell:
-#         """
-#         prodigal -i {input.assembly} -f gff -o {output.gff} -a {output.faa} -d {output.fna}
-#         """
+rule annotate:
+    input:
+        ref = select_reference()
+    params:
+        directory = lambda wildcards, input: "/".join(input.ref.split("/")[:-1])
+    output:
+        gff = "{params.directory}/genes.gff", #mapping file
+        faa = "{params.directory}/genes.faa", #protein file * this is what we'll need for annotation
+        fna = "{params.directory}/genes.fna", #nucleotide file* this is what we'll need for alignment/quantification
+    shell:
+        """
+        prodigal -i {input.ref} -f gff -o {output.gff} -a {output.faa} -d {output.fna}
+        """
