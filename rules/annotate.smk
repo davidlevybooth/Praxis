@@ -16,7 +16,7 @@ rule diamond_index:
     run:
         shell("diamond makedb -p {threads} --in {input.refdb} -d {input.refdb}")
 
-rule diamond_annotate:
+rule diamond_blastp:
     input:
         refdb = "uniref90.fasta.dmnd",
         fasta = expand("transcriptome/{assembler}_out/genes.faa", assembler = ASSEMBLER)
@@ -25,3 +25,12 @@ rule diamond_annotate:
     run:
         shell("diamond blastp -d {input.refdb} -q {input.fasta} -o {output} -p {threads} -k 1 -f 6 qseqid stitle pident length \
         mismatch gapopen qstart qend sstart send evalue bitscore")
+
+rule annotate:
+    input:
+        expand("transcriptome/{assembler}_out/genes.{{ext}}", assembler = ASSEMBLER),
+        expand("transcriptome/{assembler}_out/genes.uniref90.out", assembler = ASSEMBLER)
+    output:
+        expand("transcriptome/{assembler}_out/genes_annotated.{{ext}}", assembler = ASSEMBLER)
+    script:
+        "../scripts/annotate_fasta.py"

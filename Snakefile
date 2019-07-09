@@ -10,7 +10,6 @@ import itertools
 import pandas as pd
 from pathlib import Path
 
-THREADS = config["THREADS"]
 TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
@@ -47,5 +46,7 @@ rule all:
     Collect the main outputs of the workflow.
     """
     input:
-        expand(DE_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER, contrasts = contrasts)
-        expand(count_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER)
+        "results/tables/salmon.{trimmer}.counts.tsv"
+        # expand("transcriptome/{assembler}_out/genes_annotated.{ext}", assembler = ASSEMBLER, ext = {"faa", "fna"}),
+        # expand(DE_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER, contrasts = contrasts),
+        # expand(count_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER)

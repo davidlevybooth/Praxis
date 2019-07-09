@@ -5,6 +5,9 @@ TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 
+reference = ""
+indexBase = ""
+
 rule htseq_count_table:
     """
     Generate a count table using htseq-count.

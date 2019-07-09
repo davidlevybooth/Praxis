@@ -50,7 +50,7 @@ def select_reference():
     elif ASSEMBLER=="trinity":
         return "transcriptome/trinity_out/Trinity.fasta"
 
-rule annotate:
+rule prodigal:
     input:
         ref = select_reference()
     params:
