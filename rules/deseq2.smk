@@ -32,6 +32,5 @@ rule deseq2:
         contrasts = contrasts
     conda:
         "/envs/deseq2.yaml"
-    threads: 1
     script:
         "../scripts/deseq.R"

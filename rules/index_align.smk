@@ -8,20 +8,17 @@ ASSEMBLER = config["ASSEMBLER"]
 
 genome_url = config["genomes"][config["genome_id"]]["url"]
 
-reference = ""
-indexBase = ""
-
 # Select genome/transcriptome reference directories
 if genome_url:
-    reference = expand("genome/{genome_id}/{genome_id}_genomic.fna",
+    reference = expand("reference/genome/{genome_id}/{genome_id}_genomic.fna",
         genome_id = genome_url.split("/")[-1])
     indexBase = "intermediate/genome"
 else:
     if ASSEMBLER=="megahit":
-        reference = "transcriptome/megahit_out/final.contigs.fa"
+        reference = "reference/assembled/megahit_out/final.contigs.fa"
         indexBase = "intermediate/megahit/transcriptome"
     elif ASSEMBLER=="trinity":
-        reference = "transcriptome/trinity_out/Trinity.fasta"
+        reference = "reference/assembled/trinity_out/Trinity.fasta"
         indexBase = "intermediate/trinity/transcriptome"
 
 if "bt2" in ALIGNER:
@@ -70,12 +67,10 @@ if "bt2" in ALIGNER:
 
 if "bbmap" in ALIGNER:
     rule bbmap_align:
-        params:
-            genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1]
         input:
             fastq_1 = "transcriptome/reads/{sra_id}_1.{trimmer}.fastq",
             fastq_2 = "transcriptome/reads/{sra_id}_2.{trimmer}.fastq",
-            genome = expand("genome/{genome_id}/{genome_id}_genomic.fna", genome_id=config["genomes"][config["genome_id"]]["url"].split("/")[-1])
+            ref = reference
         output:
             sam = temp("intermediate/{sra_id}.{trimmer}.bbmap.sam"),
             bam = temp("intermediate/{sra_id}.{trimmer}.bbmap.bam")
@@ -86,7 +81,7 @@ if "bbmap" in ALIGNER:
             "benchmarks/{sra_id}.{trimmer}.bbmap.align.benchmark.txt"
         run:
             shell("bbmap.sh -Xmx20g trimreaddescriptions=t threads={threads} in1={input.fastq_1} in2={input.fastq_2} \
-            out={output.sam} ref={input.genome}  path=genome/bbmap_index/ 2> {log}")
+            out={output.sam} ref={input.ref}  path=reference/bbmap_index/ 2> {log}")
             shell("samtools view -bS {output.sam} > {output.bam}")
 
 rule sort_bam:

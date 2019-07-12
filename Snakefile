@@ -34,9 +34,7 @@ rule all:
     Collect the main outputs of the workflow.
     """
     input:
-        # expand("transcriptome/{assembler}_out/genes_annotated.{ext}", assembler = ASSEMBLER, ext = {"faa", "fna"}),
-        expand(DE_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER, contrasts = contrasts),
-        # expand(count_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER)
+        expand("reference/assembled/{assembler}_out/genes_annotated.{ext}", assembler = ASSEMBLER, ext = ["gff", "faa", "fna"]), #mapping file
 
 include: "rules/download.smk"
 include: "rules/index_align.smk"

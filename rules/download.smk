@@ -22,13 +22,12 @@ genome_url = config["genomes"][config["genome_id"]]["url"]
 if genome_url:
     rule download_genome:
         output:
-            gff = "genome/{genome_id}/{genome_id}_genomic.gff",
-            gbff = "genome/{genome_id}/{genome_id}_genomic.gbff",
-            cd_fna = "genome/{genome_id}/{genome_id}_cds_from_genomic.fna",
-            prep_gbff = "genome/{genome_id}/{genome_id}_genomic_prokka.gbff",
-            prep_gff = "genome/{genome_id}/{genome_id}_genomic_salmon.gff",
-            prep_cd_fna = "genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
-            fna = "genome/{genome_id}/{genome_id}_genomic.fna"
+            gff = "reference/genome/{genome_id}/{genome_id}_genomic.gff",
+            gbff = "reference/genome/{genome_id}/{genome_id}_genomic.gbff",
+            cd_fna = "reference/genome/{genome_id}/{genome_id}_cds_from_genomic.fna",
+            prep_gbff = "reference/genome/{genome_id}/{genome_id}_genomic_prokka.gbff",
+            prep_cd_fna = "reference/genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
+            fna = "reference/genome/{genome_id}/{genome_id}_genomic.fna"
         log:
             "log/genome/{genome_id}.log"
         benchmark:
@@ -36,11 +35,11 @@ if genome_url:
         run:
             try:
                 shell("rsync --copy-links --recursive --times --verbose "
-                "rsync://{genome_url} genome --log-file={log}")
-                shell("gunzip -r genome")
+                "rsync://{genome_url} reference/genome --log-file={log}")
+                shell("gunzip -r reference/genome")
                 shell("sed 's/product/protein/g' {output.gbff} > {output.prep_gbff}")
                 shell("sed -i 's/locus_tag/product/g' {output.prep_gbff}")
-                shell("sed 's/locus_tag/gene_id/g' {output.gff} > {output.prep_gff}")
+                shell("sed 's/locus_tag/gene_id/g' {output.gff}")
                 shell("sed 's/.*\[locus_tag=\([^]]*\)\].*/>\\1/g' {output.cd_fna} > {output.prep_cd_fna}")
                 touch("{output.fna}")
             except Exception as e:

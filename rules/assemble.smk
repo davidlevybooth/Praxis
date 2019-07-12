@@ -14,7 +14,7 @@ rule megahit_assemble:
         left = lambda input: ",".join(input[0]),
         right = lambda input: ",".join(input[1])
     output:
-        directory("transcriptome/assembled/megahit_out")
+        directory("reference/assembled/megahit_out")
     shell:
         """
         megahit -1 {params.left} -2 {params.right} --k-list 25 --no-mercy --bubble-level 0 --prune-level 3 -o {output} -m 300000000000
@@ -38,7 +38,7 @@ rule trinity_assemble:
         left = lambda wildcards, input: ",".join(input[0]),
         right = lambda wildcards, input: ",".join(input[1])
     output:
-        directory("transcriptome/assembled/trinity_out")
+        directory("reference/assembled/trinity_out")
     shell:
         """
         Trinity --left {params.left} --right {params.right} -o {output} --max_memory 30G --CPU 6
@@ -46,20 +46,19 @@ rule trinity_assemble:
 
 def select_reference():
     if ASSEMBLER=="megahit":
-        return "transcriptome/megahit_out/final.contigs.fa"
+        return "reference/assembled/megahit_out/final.contigs.fa"
     elif ASSEMBLER=="trinity":
-        return "transcriptome/trinity_out/Trinity.fasta"
+        return "reference/assembled/trinity_out/Trinity.fasta"
 
 rule prodigal:
     input:
         ref = select_reference()
-    params:
-        directory = lambda wildcards, input: "/".join(input.ref.split("/")[:-1])
     output:
-        gff = "{params.directory}/genes.gff", #mapping file
-        faa = "{params.directory}/genes.faa", #protein file * this is what we'll need for annotation
-        fna = "{params.directory}/genes.fna", #nucleotide file* this is what we'll need for alignment/quantification
+        gff = expand("reference/assembled/{assembler}_out/genes.gff", assembler = ASSEMBLER), #mapping file
+        faa = expand("reference/assembled/{assembler}_out/genes.faa", assembler = ASSEMBLER), #protein file * this is what we'll need for annotation
+        fna = expand("reference/assembled/{assembler}_out/genes.fna", assembler = ASSEMBLER)  #nucleotide file* this is what we'll need for alignment/quantification
     shell:
         """
         prodigal -i {input.ref} -f gff -o {output.gff} -a {output.faa} -d {output.fna}
+        sed 's/locus_tag/gene_id/g' {output.gff}
         """

@@ -5,17 +5,28 @@ TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 
-reference = ""
-indexBase = ""
+# Select genome/transcriptome ref_gff directories
+if genome_url:
+    ref_gff = expand("reference/genome/{genome_id}/{genome_id}_genomic.gff",
+        genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
+    ref_fna = expand("reference/genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
+        genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
+else:
+    if ASSEMBLER=="megahit":
+        ref_gff = "reference/assembled/megahit_out/genes_annotated.gff"
+        ref_fna = "reference/assembled/megahit_out/genes_annotated.fna"
+    elif ASSEMBLER=="trinity":
+        ref_gff = "reference/assembled/trinity_out/genes_annotated.gff"
+        ref_fna = "reference/assembled/trinity_out/genes_annotated.fna"
 
 rule htseq_count_table:
     """
     Generate a count table using htseq-count.
     """
     input:
-        bams=expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam",
+        bams = expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam",
         sra_id = config["sample_ids"], trimmer = config["TRIMMER"], aligner = config["ALIGNER"]),
-        gff=expand("genome/{genome_id}/{genome_id}_genomic.gff", genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
+        gff = ref_gff
     output:
         "results/tables/htseq.{aligner}.{trimmer}.counts.tsv"
     shadow: "minimal"
@@ -37,7 +48,7 @@ rule feature_counts_table:
     input:
         bams=expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam",
         sra_id = config["sample_ids"], trimmer = config["TRIMMER"], aligner = config["ALIGNER"]),
-        gff=expand("genome/{genome_id}/{genome_id}_genomic_salmon.gff", genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
+        gff = ref_gff
     output:
         "results/tables/featureCounts.{aligner}.{trimmer}.counts.tsv"
     threads: THREADS
@@ -52,9 +63,9 @@ rule feature_counts_table:
 
 rule salmon_index:
     input:
-        fasta=expand("genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna", genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
+        fasta = ref_fna
     output:
-        directory("genome/salmon_quasi")
+        directory("reference/salmon_quasi")
     threads: THREADS
     run:
         shell("salmon index -t {input.fasta} -i {output} --type quasi -k 31")
@@ -67,7 +78,7 @@ rule salmon_quant:
     input:
         fastq_1="transcriptome/reads/{sra_id}_1.{trimmer}.fastq",
         fastq_2="transcriptome/reads/{sra_id}_2.{trimmer}.fastq",
-        salmon_dir = directory("genome/salmon_quasi")
+        salmon_dir = directory("reference/salmon_quasi")
     output:
         directory("transcriptome/salmon/{sra_id}_{trimmer}")
     threads: THREADS
