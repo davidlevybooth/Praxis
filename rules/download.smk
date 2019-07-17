@@ -39,7 +39,7 @@ if genome_url:
                 shell("gunzip -r reference/genome")
                 shell("sed 's/product/protein/g' {output.gbff} > {output.prep_gbff}")
                 shell("sed -i 's/locus_tag/product/g' {output.prep_gbff}")
-                shell("sed 's/locus_tag/gene_id/g' {output.gff}")
+                shell("sed -i 's/locus_tag/gene_id/g' {output.gff}")
                 shell("sed 's/.*\[locus_tag=\([^]]*\)\].*/>\\1/g' {output.cd_fna} > {output.prep_cd_fna}")
                 touch("{output.fna}")
             except Exception as e:

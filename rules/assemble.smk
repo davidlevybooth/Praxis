@@ -15,10 +15,8 @@ rule megahit_assemble:
         right = lambda input: ",".join(input[1])
     output:
         directory("reference/assembled/megahit_out")
-    shell:
-        """
-        megahit -1 {params.left} -2 {params.right} --k-list 25 --no-mercy --bubble-level 0 --prune-level 3 -o {output} -m 300000000000
-        """
+    run:
+        shell("megahit -1 {params.left} -2 {params.right} --k-list 25 --no-mercy --bubble-level 0 --prune-level 3 -o {output} -m 300000000000")
 
 rule trinity_reformat_headers:
     input:
@@ -39,10 +37,8 @@ rule trinity_assemble:
         right = lambda wildcards, input: ",".join(input[1])
     output:
         directory("reference/assembled/trinity_out")
-    shell:
-        """
-        Trinity --left {params.left} --right {params.right} -o {output} --max_memory 30G --CPU 6
-        """
+    run:
+        shell("Trinity --left {params.left} --right {params.right} -o {output} --max_memory 30G --CPU 6")
 
 def select_reference():
     if ASSEMBLER=="megahit":
@@ -52,13 +48,11 @@ def select_reference():
 
 rule prodigal:
     input:
+        directory("reference/assembled/trinity_out"),
         ref = select_reference()
     output:
         gff = expand("reference/assembled/{assembler}_out/genes.gff", assembler = ASSEMBLER), #mapping file
         faa = expand("reference/assembled/{assembler}_out/genes.faa", assembler = ASSEMBLER), #protein file * this is what we'll need for annotation
         fna = expand("reference/assembled/{assembler}_out/genes.fna", assembler = ASSEMBLER)  #nucleotide file* this is what we'll need for alignment/quantification
-    shell:
-        """
-        prodigal -i {input.ref} -f gff -o {output.gff} -a {output.faa} -d {output.fna}
-        sed 's/locus_tag/gene_id/g' {output.gff}
-        """
+    run:
+        shell("prodigal -i {input.ref} -f gff -o {output.gff} -a {output.faa} -d {output.fna}")

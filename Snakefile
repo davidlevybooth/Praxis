@@ -21,7 +21,7 @@ contrasts = list(itertools.combinations(set(samples["Condition"]), 2))
 contrasts = sorted(['_'.join(map(str,sorted(pair))) for pair in contrasts])
 
 if "salmon" in METHOD and len(METHOD) == 1:
-    count_out = "results/tables/salmon.{{trimmer}}.counts.tsv"
+    count_out = "results/tables/salmon.{trimmer}.counts.tsv"
     DE_out = count_out.replace("counts", "{contrasts}")
 if "salmon" in METHOD and len(METHOD) > 1:
     METHOD.remove("salmon")
@@ -34,7 +34,9 @@ rule all:
     Collect the main outputs of the workflow.
     """
     input:
-        expand("reference/assembled/{assembler}_out/genes_annotated.{ext}", assembler = ASSEMBLER, ext = ["gff", "faa", "fna"]), #mapping file
+        # "results/tables/salmon.trimmomatic.counts.tsv",
+        expand(DE_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER, contrasts = contrasts)
+
 
 include: "rules/download.smk"
 include: "rules/index_align.smk"

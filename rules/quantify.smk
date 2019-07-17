@@ -7,11 +7,13 @@ METHOD = config["METHOD"]
 
 # Select genome/transcriptome ref_gff directories
 if genome_url:
+    feature_type = "gene"
     ref_gff = expand("reference/genome/{genome_id}/{genome_id}_genomic.gff",
         genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
     ref_fna = expand("reference/genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
         genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
 else:
+    feature_type = "CDS"
     if ASSEMBLER=="megahit":
         ref_gff = "reference/assembled/megahit_out/genes_annotated.gff"
         ref_fna = "reference/assembled/megahit_out/genes_annotated.fna"
@@ -37,7 +39,7 @@ rule htseq_count_table:
         """
         # Save the count table as a temporary file and then prepend a header line
         # with the sample names
-        htseq-count --format bam --type gene --idattr locus_tag -r pos {input.bams} {input.gff} > {output}
+        htseq-count --format bam --type gene --idattr gene_id -r pos {input.bams} {input.gff} > {output}
         #echo '{input.bams}' | tr ' ' '\t' | cat - tempfile2 > {output}
         """
 
@@ -51,6 +53,8 @@ rule feature_counts_table:
         gff = ref_gff
     output:
         "results/tables/featureCounts.{aligner}.{trimmer}.counts.tsv"
+    params:
+        type = feature_type
     threads: THREADS
     log:
         "log/featureCounts.{aligner}.{trimmer}.log"
@@ -58,7 +62,7 @@ rule feature_counts_table:
         "benchmarks/featureCounts.{aligner}.{trimmer}.benchmark.txt"
     shell:
         """
-        featureCounts -O -p -T {threads} -t gene -F GTF -a {input.gff} -o {output} {input.bams}
+        featureCounts -O -p -T {threads} -t {params.type} -F GTF -a {input.gff} -o {output} {input.bams}
         """
 
 rule salmon_index:
