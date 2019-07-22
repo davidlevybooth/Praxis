@@ -91,7 +91,7 @@ rule sort_bam:
     input:
         "intermediate/{sra_id}.{trimmer}.{aligner}.bam"
     output:
-        "intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam"
+        temp("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam")
     threads: THREADS
     shell:
         """

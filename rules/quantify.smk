@@ -48,7 +48,7 @@ rule feature_counts_table:
     Generate a count table with featureCounts
     """
     input:
-        bams=expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam",
+        bams = expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam",
         sra_id = config["sample_ids"], trimmer = config["TRIMMER"], aligner = config["ALIGNER"]),
         gff = ref_gff
     output:
@@ -69,7 +69,7 @@ rule salmon_index:
     input:
         fasta = ref_fna
     output:
-        directory("reference/salmon_quasi")
+        directory("reference/salmon_quasi"),
     threads: THREADS
     run:
         shell("salmon index -t {input.fasta} -i {output} --type quasi -k 31")
@@ -82,7 +82,7 @@ rule salmon_quant:
     input:
         fastq_1="transcriptome/reads/{sra_id}_1.{trimmer}.fastq",
         fastq_2="transcriptome/reads/{sra_id}_2.{trimmer}.fastq",
-        salmon_dir = directory("reference/salmon_quasi")
+        salmon_dir = directory("reference/salmon_quasi"),
     output:
         directory("transcriptome/salmon/{sra_id}_{trimmer}")
     threads: THREADS

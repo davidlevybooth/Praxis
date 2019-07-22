@@ -11,22 +11,21 @@ rule megahit_assemble:
         expand("transcriptome/reads/{sra_id}_1.{trimmer}.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"]),
         expand("transcriptome/reads/{sra_id}_2.{trimmer}.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"])
     params:
-        left = lambda input: ",".join(input[0]),
-        right = lambda input: ",".join(input[1])
+        left = lambda wildcards, input: ",".join(input[0]),
+        right = lambda wildcards, input: ",".join(input[1]),
+        out = "reference/assembled/megahit_out"
     output:
-        directory("reference/assembled/megahit_out")
+        ref = "reference/assembled/megahit_out/final.contigs.fa"
     run:
-        shell("megahit -1 {params.left} -2 {params.right} --k-list 25 --no-mercy --bubble-level 0 --prune-level 3 -o {output} -m 300000000000")
+        shell("megahit -1 {params.left} -2 {params.right} --k-list 25 --no-mercy --bubble-level 0 --prune-level 3 -o {params.out} -m 300000000000")
 
 rule trinity_reformat_headers:
     input:
-        "transcriptome/reads/{sra_id}_{n}.trimmomatic.fastq"
+        "transcriptome/reads/{sra_id}_{n}.{trimmer}.fastq"
     output:
-        "transcriptome/reads/{sra_id}_{n}.trimmomatic.newheaders.fastq"
-    shell:
-        """
-        perl -ne 's/SR\S+ (\S+) .+/$1\/{wildcards.n}/; print' {input} > {output}
-        """
+        "transcriptome/reads/{sra_id}_{n}.{trimmer}.newheaders.fastq"
+    run:
+        shell("perl -ne 's/SR\S+ (\S+) .+/$1\/{wildcards.n}/; print' {input} > {output}")
 
 rule trinity_assemble:
     input:
@@ -34,11 +33,12 @@ rule trinity_assemble:
         expand("transcriptome/reads/{sra_id}_2.{trimmer}.newheaders.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"])
     params:
         left = lambda wildcards, input: ",".join(input[0]),
-        right = lambda wildcards, input: ",".join(input[1])
+        right = lambda wildcards, input: ",".join(input[1]),
+        out = "reference/assembled/trinity_out"
     output:
-        directory("reference/assembled/trinity_out")
+        ref = "{params.out}/Trinity.fasta"
     run:
-        shell("Trinity --left {params.left} --right {params.right} -o {output} --max_memory 30G --CPU 6")
+        shell("Trinity --left {params.left} --right {params.right} -o {params.out} --max_memory 30G --CPU 6")
 
 def select_reference():
     if ASSEMBLER=="megahit":
@@ -48,7 +48,6 @@ def select_reference():
 
 rule prodigal:
     input:
-        directory("reference/assembled/trinity_out"),
         ref = select_reference()
     output:
         gff = expand("reference/assembled/{assembler}_out/genes.gff", assembler = ASSEMBLER), #mapping file
