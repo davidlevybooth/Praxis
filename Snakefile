@@ -21,12 +21,12 @@ contrasts = list(itertools.combinations(set(samples["Condition"]), 2))
 contrasts = sorted(['_'.join(map(str,sorted(pair))) for pair in contrasts])
 
 if "salmon" in METHOD and len(METHOD) == 1:
-    count_out = "results/tables/salmon.{trimmer}.counts.tsv"
+    count_out = "results/tables/salmon/{trimmer}/counts.tsv"
     DE_out = count_out.replace("counts", "{contrasts}")
 if "salmon" in METHOD and len(METHOD) > 1:
     METHOD.remove("salmon")
-    count_out = ["results/tables/salmon.{trimmer}.counts.tsv",
-    "results/tables/{method}.{aligner}.{trimmer}.counts.tsv"]
+    count_out = ["results/tables/salmon/{trimmer}/counts.tsv",
+    "results/tables/{method}/{trimmer}/{aligner}/counts.tsv"]
     DE_out = [table.replace("counts", "{contrasts}") for table in count_out]
 
 rule all:

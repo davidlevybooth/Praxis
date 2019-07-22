@@ -54,8 +54,8 @@ rule get_SRA_by_accession:
     max_reads: Maximal number of reads to download for each sample.
     """
     output:
-        "transcriptome/reads/{sra_id}_1.fastq",
-        "transcriptome/reads/{sra_id}_2.fastq"
+        "transcriptome/reads/untrimmed/{sra_id}_1.fastq",
+        "transcriptome/reads/untrimmed/{sra_id}_2.fastq"
     params:
         max_reads = config["max_reads"]
     threads: THREADS
@@ -67,13 +67,3 @@ rule get_SRA_by_accession:
         # This clears a cache where SRA Tools reserves a lot of space
         cache-mgr --clear >/dev/null 2>&1
         """
-
-rule rename_reads:
-    input:
-        "transcriptome/reads/{sra_id}_1.fastq",
-        "transcriptome/reads/{sra_id}_2.fastq"
-    output:
-        "transcriptome/reads/{sra_id}_1.untrimmed.fastq",
-        "transcriptome/reads/{sra_id}_2.untrimmed.fastq"
-    run:
-        shell("rename 's/.fastq/.untrimmed.fastq/' {input}")

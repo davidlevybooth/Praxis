@@ -8,8 +8,8 @@ METHOD = config["METHOD"]
 
 rule megahit_assemble:
     input:
-        expand("transcriptome/reads/{sra_id}_1.{trimmer}.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"]),
-        expand("transcriptome/reads/{sra_id}_2.{trimmer}.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"])
+        expand("transcriptome/reads/{trimmer}/{sra_id}_1.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"]),
+        expand("transcriptome/reads/{trimmer}/{sra_id}_2.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"])
     params:
         left = lambda wildcards, input: ",".join(input[0]),
         right = lambda wildcards, input: ",".join(input[1]),
@@ -29,8 +29,8 @@ rule trinity_reformat_headers:
 
 rule trinity_assemble:
     input:
-        expand("transcriptome/reads/{sra_id}_1.{trimmer}.newheaders.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"]),
-        expand("transcriptome/reads/{sra_id}_2.{trimmer}.newheaders.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"])
+        expand("transcriptome/reads/{trimmer}/{sra_id}_1.newheaders.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"]),
+        expand("transcriptome/reads/{trimmer}/{sra_id}_2.newheaders.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"])
     params:
         left = lambda wildcards, input: ",".join(input[0]),
         right = lambda wildcards, input: ",".join(input[1]),

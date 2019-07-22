@@ -26,15 +26,15 @@ rule htseq_count_table:
     Generate a count table using htseq-count.
     """
     input:
-        bams = expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam",
+        bams = expand("intermediate/{trimmer}/{aligner}/{sra_id}.sorted.bam",
         sra_id = config["sample_ids"], trimmer = config["TRIMMER"], aligner = config["ALIGNER"]),
         gff = ref_gff
     output:
-        "results/tables/htseq.{aligner}.{trimmer}.counts.tsv"
+        "results/tables/htseq/{trimmer}/{aligner}/counts.tsv"
     shadow: "minimal"
     threads: THREADS
     benchmark:
-        "benchmarks/htseq.{aligner}.{trimmer}.benchmark.txt"
+        "benchmarks/htseq/{trimmer}/{aligner}/benchmark.txt"
     shell:
         """
         # Save the count table as a temporary file and then prepend a header line
@@ -48,18 +48,18 @@ rule feature_counts_table:
     Generate a count table with featureCounts
     """
     input:
-        bams = expand("intermediate/{sra_id}.{trimmer}.{aligner}.sorted.bam",
+        bams = expand("intermediate/{trimmer}/{aligner}/{sra_id}.sorted.bam",
         sra_id = config["sample_ids"], trimmer = config["TRIMMER"], aligner = config["ALIGNER"]),
         gff = ref_gff
     output:
-        "results/tables/featureCounts.{aligner}.{trimmer}.counts.tsv"
+        "results/tables/featureCounts/{trimmer}/{aligner}/counts.tsv"
     params:
         type = feature_type
     threads: THREADS
     log:
-        "log/featureCounts.{aligner}.{trimmer}.log"
+        "log/featureCounts/{trimmer}/{aligner}/log"
     benchmark:
-        "benchmarks/featureCounts.{aligner}.{trimmer}.benchmark.txt"
+        "benchmarks/featureCounts/{trimmer}/{aligner}/benchmark.txt"
     shell:
         """
         featureCounts -O -p -T {threads} -t {params.type} -F GTF -a {input.gff} -o {output} {input.bams}
@@ -80,16 +80,16 @@ rule salmon_quant:
     Generate directories containing count files with salmon (quasi mode)
     """
     input:
-        fastq_1="transcriptome/reads/{sra_id}_1.{trimmer}.fastq",
-        fastq_2="transcriptome/reads/{sra_id}_2.{trimmer}.fastq",
+        fastq_1="transcriptome/reads/{trimmer}/{sra_id}_1.fastq",
+        fastq_2="transcriptome/reads/{trimmer}/{sra_id}_2.fastq",
         salmon_dir = directory("reference/salmon_quasi"),
     output:
         directory("transcriptome/salmon/{sra_id}_{trimmer}")
     threads: THREADS
     log:
-        "log/salmon.{sra_id}.{trimmer}.log"
+        "log/salmon/{trimmer}/{sra_id}.log"
     benchmark:
-        "benchmarks/salmon.quant.{sra_id}.{trimmer}.benchmark.txt"
+        "benchmarks/salmon.quant/{trimmer}/{sra_id}.benchmark.txt"
     run:
         shell("salmon quant -i {input.salmon_dir} -l A -p {threads} --validateMappings \
         -1 {input.fastq_1} -2 {input.fastq_2} -o {output} 2> {log}")
@@ -99,6 +99,6 @@ rule salmon_quant_table:
     input:
         expand(directory("transcriptome/salmon/{sra_id}_{trimmer}"), sra_id = config["sample_ids"], trimmer = TRIMMER)
     output:
-        "results/tables/salmon.{trimmer}.counts.tsv"
+        "results/tables/salmon/{trimmer}/counts.tsv"
     run:
         shell("salmon quantmerge --quants {input} --column numreads -o {output}")
