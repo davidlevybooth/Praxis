@@ -34,4 +34,4 @@ with open (fasta_file, "r") as myfasta:
         else:
             ofile.write(line)
 
-ofile.close() 
+ofile.close()

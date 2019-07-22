@@ -34,19 +34,19 @@ with open (gff_file, "r") as mygff:
     for line in mygff:
         if not line.startswith ("#"):
             line_list = line.split(";")
-            line_list = [i.split() for i in line_list] 
+            line_list = [i.split() for i in line_list]
             line_list = [item for sublist in line_list for item in sublist]
             gene = line_list[8].split("_")[1]
-            contig = line_list[0] 
+            contig = line_list[0]
             gene_id = contig+"_"+gene
             if line.rstrip().endswith(';'):
                 new_line=line.rstrip()+"gene_id="+gene_id+";"
-            else: 
-                new_line=line.rstrip()+";gene_id="+gene_id+";"    
+            else:
+                new_line=line.rstrip()+";gene_id="+gene_id+";"
             if gene_id in anotation_dict:
                 new_line=new_line+"product="+str(anotation_dict[gene_id])+";"
                 ofile.write(new_line + "\n")
         else:
             ofile.write(line)
 
-ofile.close() 
+ofile.close()

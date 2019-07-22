@@ -1,39 +1,19 @@
 import os
 from pathlib import Path
-THREADS = config["threads"]
+THREADS = config["THREADS"]
 TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
-if "salmon" in METHOD and len(METHOD) == 1:
-    count_out = "results/tables/salmon.{{trimmer}}.counts.tsv"
-if "salmon" in METHOD and len(METHOD) > 1:
-    METHOD.remove("salmon")
-    count_out = ["results/tables/salmon.{trimmer}.counts.tsv",
-    "results/tables/{method}.{aligner}.{trimmer}.counts.tsv"]
-
-# rule all:
-#     input:
-#        expand("transcriptome/reads/{sra_id}_1.trimmomatic.fastq", sra_id = config["sample_ids"]),
-#        expand("transcriptome/reads/{sra_id}_2.trimmomatic.fastq", sra_id = config["sample_ids"]),
-#        expand("transcriptome/reads/{sra_id}_1.unpaired.fastq", sra_id = config["sample_ids"]),
-#        expand("transcriptome/reads/{sra_id}_2.unpaired.fastq", sra_id = config["sample_ids"]),
-#        expand("transcriptome/reads/{sra_id}_1.bbduk.fastq", sra_id = config["sample_ids"]),
-#        expand("transcriptome/reads/{sra_id}_2.bbduk.fastq", sra_id = config["sample_ids"]),
-#        expand("transcriptome/qc/fastqc/{trimmer}/{sra_id}_1.html", sra_id = config["sample_ids"], trimmer = TRIMMER),
-#        expand("transcriptome/qc/fastqc/{trimmer}/{sra_id}_2.html", sra_id = config["sample_ids"], trimmer = TRIMMER),
-#        expand(directory("transcriptome/qc/fastqc/{trimmer}/{sra_id}_1"), sra_id = config["sample_ids"], trimmer = TRIMMER),
-#        expand(directory("transcriptome/qc/fastqc/{trimmer}/{sra_id}_2"), sra_id = config["sample_ids"], trimmer = TRIMMER)
-
 
 rule trimmomatic:
     input:
-        read1 = "transcriptome/reads/{sra_id}_1.untrimmed.fastq",
-        read2 = "transcriptome/reads/{sra_id}_2.untrimmed.fastq"
+        read1 = "transcriptome/reads/untrimmed/{sra_id}_1.fastq",
+        read2 = "transcriptome/reads/untrimmed/{sra_id}_2.fastq"
     output:
-       paired1 = "transcriptome/reads/{sra_id}_1.trimmomatic.fastq",
-       paired2 = "transcriptome/reads/{sra_id}_2.trimmomatic.fastq",
-       unpaired1 = "transcriptome/reads/{sra_id}_1.unpaired.fastq",
-       unpaired2 = "transcriptome/reads/{sra_id}_2.unpaired.fastq"
+       paired1 = "transcriptome/reads/trimmomatic/{sra_id}_1.fastq",
+       paired2 = "transcriptome/reads/trimmomatic/{sra_id}_2.fastq",
+       unpaired1 = "transcriptome/reads/unpaired/{sra_id}_1.fastq",
+       unpaired2 = "transcriptome/reads/unpaired/{sra_id}_2.fastq"
     threads: THREADS
     log:
         "log/{sra_id}.trimmomatic.log"
@@ -46,16 +26,16 @@ rule trimmomatic:
 
 rule bbduk:
     input:
-        read1 = "transcriptome/reads/{sra_id}_1.untrimmed.fastq",
-        read2 = "transcriptome/reads/{sra_id}_2.untrimmed.fastq"
+        read1 = "transcriptome/reads/untrimmed/{sra_id}_1.fastq",
+        read2 = "transcriptome/reads/untrimmed/{sra_id}_2.fastq"
     output:
-       paired1 = "transcriptome/reads/{sra_id}_1.bbduk.fastq",
-       paired2 = "transcriptome/reads/{sra_id}_2.bbduk.fastq"
+       paired1 = "transcriptome/reads/bbduk/{sra_id}_1.fastq",
+       paired2 = "transcriptome/reads/bbduk/{sra_id}_2.fastq"
     threads: THREADS
     log:
-        "log/{sra_id}.bbduk.log"
+        "log/bbduk/{sra_id}.log"
     benchmark:
-        "benchmarks/{sra_id}.bbduk.benchmark.txt"
+        "benchmarks/bbduk/{sra_id}.benchmark.txt"
     shell:
         """
         bbduk.sh -Xmx20g t={threads} in1={input.read1} in2={input.read2} out1={output.paired1} out2={output.paired2} \
@@ -64,7 +44,7 @@ rule bbduk:
 
 rule fastqc:
     input:
-        "transcriptome/reads/{sra_id}_{num}.{trimmer}.fastq"
+        "transcriptome/reads/{trimmer}/{sra_id}_{num}.fastq"
     output:
         html="transcriptome/qc/fastqc/{trimmer}/{sra_id}_{num}.html",
         unzipped=directory("transcriptome/qc/fastqc/{trimmer}/{sra_id}_{num}")
