@@ -94,6 +94,9 @@ rule sort_bam:
         "intermediate/{trimmer}/{aligner}/{sra_id}.bam"
     output:
         "intermediate/{trimmer}/{aligner}/{sra_id}.sorted.bam"
+    wildcard_constraints:
+        trimmer=TRIMMER,
+        aligner=ALIGNER
     threads: THREADS
     shell:
         """
