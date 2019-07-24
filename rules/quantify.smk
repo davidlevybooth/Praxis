@@ -48,8 +48,7 @@ rule feature_counts_table:
     Generate a count table with featureCounts
     """
     input:
-        bams = expand("intermediate/{trimmer}/{aligner}/{sra_id}.sorted.bam",
-        sra_id = config["sample_ids"], trimmer = config["TRIMMER"], aligner = config["ALIGNER"]),
+        bams = expand("intermediate/{{trimmer}}/{{aligner}}/{sra_id}.sorted.bam", sra_id = config["sample_ids"]),
         gff = ref_gff
     output:
         "results/tables/featureCounts/{trimmer}/{aligner}/counts.tsv"

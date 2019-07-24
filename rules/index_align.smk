@@ -53,7 +53,7 @@ if "bt2" in ALIGNER:
             index_rev = expand("{indexBase}.rev.{n}.bt2", indexBase = indexBase, n = ["1","2"])
         output:
             sam = temp("intermediate/{trimmer}/bt2/{sra_id}.sam"),
-            bam = temp("intermediate/{trimmer}/bt2/{sra_id}.{trimmer}.bam")
+            bam = temp("intermediate/{trimmer}/bt2/{sra_id}.bam")
         params:
             base = indexBase
         threads: THREADS
@@ -62,7 +62,7 @@ if "bt2" in ALIGNER:
         benchmark:
             "benchmarks/{trimmer}/{sra_id}.bt2.align.benchmark.txt"
         run:
-            shell("bowtie2 -x " + params.base + " --threads {threads} -1 {input.fastq_1} -2 {input.fastq_2} -S {output.sam} 2> {log}")
+            shell("bowtie2 -x {params.base} --threads {threads} -1 {input.fastq_1} -2 {input.fastq_2} -S {output.sam} 2> {log}")
             shell("samtools view -bS {output.sam} > {output.bam}")
 
 if "bbmap" in ALIGNER:
@@ -74,6 +74,8 @@ if "bbmap" in ALIGNER:
         output:
             sam = temp("intermediate/{trimmer}/bbmap/{sra_id}.sam"),
             bam = temp("intermediate/{trimmer}/bbmap/{sra_id}.bam")
+        wildcard_constraints:
+            sra_id = "^[^.]*$"
         threads: THREADS
         log:
             "log/{trimmer}/{sra_id}.bbmap.align.log"
@@ -91,7 +93,7 @@ rule sort_bam:
     input:
         "intermediate/{trimmer}/{aligner}/{sra_id}.bam"
     output:
-        temp("intermediate/{trimmer}/{aligner}/{sra_id}.sorted.bam")
+        "intermediate/{trimmer}/{aligner}/{sra_id}.sorted.bam"
     threads: THREADS
     shell:
         """

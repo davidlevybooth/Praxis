@@ -34,7 +34,6 @@ rule all:
     Collect the main outputs of the workflow.
     """
     input:
-        # "results/tables/salmon.trimmomatic.counts.tsv",
         expand(DE_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER, contrasts = contrasts)
 
 

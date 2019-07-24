@@ -1,6 +1,6 @@
 ASSEMBLER = config["ASSEMBLER"]
 
-rule download:
+rule download_uniref:
     output:
         "reference/uniref90.fasta"
     run:
