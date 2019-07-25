@@ -52,15 +52,17 @@ if "bt2" in ALIGNER:
             index = expand("{indexBase}.{n}.bt2", indexBase = indexBase, n = ["1","2","3","4"]),
             index_rev = expand("{indexBase}.rev.{n}.bt2", indexBase = indexBase, n = ["1","2"])
         output:
-            sam = temp("intermediate/{trimmer}/bt2/{sra_id}.sam"),
-            bam = temp("intermediate/{trimmer}/bt2/{sra_id}.bam")
+            sam = "intermediate/{trimmer}/bt2/{sra_id}.sam",
+            bam = "intermediate/{trimmer}/bt2/{sra_id}.bam"
+        wildcard_constraints:
+            sra_id = '((?!\.).)*'
         params:
             base = indexBase
         threads: THREADS
         log:
-            "log/{trimmer}/{sra_id}.bt2.align.log"
+            "log/{trimmer}/bt2/{sra_id}.align.log"
         benchmark:
-            "benchmarks/{trimmer}/{sra_id}.bt2.align.benchmark.txt"
+            "benchmarks/{trimmer}/bt2/{sra_id}.align.benchmark.txt"
         run:
             shell("bowtie2 -x {params.base} --threads {threads} -1 {input.fastq_1} -2 {input.fastq_2} -S {output.sam} 2> {log}")
             shell("samtools view -bS {output.sam} > {output.bam}")
@@ -72,10 +74,8 @@ if "bbmap" in ALIGNER:
             fastq_2 = "transcriptome/reads/{trimmer}/{sra_id}_2.fastq",
             ref = reference
         output:
-            sam = temp("intermediate/{trimmer}/bbmap/{sra_id}.sam"),
-            bam = temp("intermediate/{trimmer}/bbmap/{sra_id}.bam")
-        wildcard_constraints:
-            sra_id = "^[^.]*$"
+            sam = "intermediate/{trimmer}/bbmap/{sra_id}.sam",
+            bam = "intermediate/{trimmer}/bbmap/{sra_id}.bam"
         threads: THREADS
         log:
             "log/{trimmer}/{sra_id}.bbmap.align.log"
@@ -91,12 +91,9 @@ rule sort_bam:
     Sort a bam file.
     """
     input:
-        "intermediate/{trimmer}/{aligner}/{sra_id}.bam"
+        expand("intermediate/{trimmer}/{aligner}/{{sra_id}}.bam", trimmer=TRIMMER, aligner=ALIGNER),
     output:
-        "intermediate/{trimmer}/{aligner}/{sra_id}.sorted.bam"
-    wildcard_constraints:
-        trimmer=TRIMMER,
-        aligner=ALIGNER
+        expand("intermediate/{trimmer}/{aligner}/{{sra_id}}.sorted.bam", trimmer=TRIMMER, aligner=ALIGNER),
     threads: THREADS
     shell:
         """

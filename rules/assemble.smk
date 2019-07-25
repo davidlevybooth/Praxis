@@ -8,16 +8,18 @@ METHOD = config["METHOD"]
 
 rule megahit_assemble:
     input:
-        expand("transcriptome/reads/{trimmer}/{sra_id}_1.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"]),
-        expand("transcriptome/reads/{trimmer}/{sra_id}_2.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"])
+        expand("transcriptome/reads/{trimmer}/{sra_id}_1.fastq", sra_id=config["sample_ids"], trimmer=TRIMMER),
+        expand("transcriptome/reads/{trimmer}/{sra_id}_2.fastq", sra_id=config["sample_ids"], trimmer=TRIMMER)
     params:
         left = lambda wildcards, input: ",".join(input[0]),
         right = lambda wildcards, input: ",".join(input[1]),
         out = "reference/assembled/megahit_out"
     output:
         ref = "reference/assembled/megahit_out/final.contigs.fa"
+    threads:
+        THREADS
     run:
-        shell("megahit -1 {params.left} -2 {params.right} --k-list 25 --no-mercy --bubble-level 0 --prune-level 3 -o {params.out} -m 300000000000")
+        shell("megahit -1 {params.left} -2 {params.right} --k-list 25 --no-mercy --bubble-level 0 --prune-level 3 -o {params.out} -m 300000000000 -t {threads}")
 
 rule trinity_reformat_headers:
     input:
@@ -34,11 +36,13 @@ rule trinity_assemble:
     params:
         left = lambda wildcards, input: ",".join(input[0]),
         right = lambda wildcards, input: ",".join(input[1]),
-        out = "reference/assembled/trinity_out"
+        out = "reference/assembled/trinity_out",
+    threads:
+        THREADS
     output:
         ref = "{params.out}/Trinity.fasta"
     run:
-        shell("Trinity --left {params.left} --right {params.right} -o {params.out} --max_memory 30G --CPU 6")
+        shell("Trinity --left {params.left} --right {params.right} -o {params.out} --max_memory 30G --CPU {threads}")
 
 def select_reference():
     if ASSEMBLER=="megahit":

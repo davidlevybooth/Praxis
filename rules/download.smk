@@ -56,8 +56,6 @@ rule get_SRA_by_accession:
     output:
         "transcriptome/reads/untrimmed/{sra_id}_1.fastq",
         "transcriptome/reads/untrimmed/{sra_id}_2.fastq"
-    params:
-        max_reads = config["max_reads"]
     threads: THREADS
     benchmark:
         "benchmarks/{sra_id}.download.benchmark.txt"

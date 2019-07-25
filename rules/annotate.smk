@@ -1,18 +1,20 @@
 ASSEMBLER = config["ASSEMBLER"]
+THREADS = config["THREADS"]
 
 rule download_uniref:
     output:
         "reference/uniref90.fasta"
     run:
-        shell("wget ftp://ftp.uniprot.org/pub/databases/uniprot/uniref/uniref90/uniref90.fasta.gz")
+        shell("wget ftp://ftp.uniprot.org/pub/databases/uniprot/uniref/uniref90/uniref90.fasta.gz -P reference")
         shell("gunzip reference/uniref90.fasta.gz")
-
 
 rule diamond_index:
     input:
-        refdb = "uniref90.fasta"
+        refdb = "reference/uniref90.fasta"
     output:
         "reference/uniref90.fasta.dmnd"
+    threads:
+        THREADS
     run:
         shell("diamond makedb -p {threads} --in {input.refdb} -d {input.refdb}")
 
