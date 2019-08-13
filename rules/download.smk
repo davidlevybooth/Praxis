@@ -17,7 +17,7 @@ TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 
-genome_url = config["genomes"]["genome_id"]["ncbi_url"]
+genome_url = config["genomes"]["RREP4"]["ncbi_url"]
 
 if genome_url:
     rule download_genome:

@@ -15,7 +15,7 @@ ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 ASSEMBLER = config["ASSEMBLER"]
 
-genome_url = config["genomes"]["genome_id"]["ncbi_url"]
+genome_url = config["genomes"]["RREP4"]["ncbi_url"]
 samples = pd.read_csv("samples.tsv", sep="\t")
 contrasts = list(itertools.combinations(set(samples["Condition"]), 2))
 contrasts = sorted(['_'.join(map(str,sorted(pair))) for pair in contrasts])
@@ -43,6 +43,7 @@ rule all:
     Collect the main outputs of the workflow.
     """
     input:
+        fastqc = "transcriptome/qc/fastqc/{trimmer}/{sra_id}_{num}.html",
         expand(count_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER),
         expand(DE_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER, contrasts = contrasts)
 

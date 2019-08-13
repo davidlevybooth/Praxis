@@ -9,9 +9,9 @@ METHOD = config["METHOD"]
 if genome_url:
     feature_type = "gene"
     ref_gff = expand("reference/genome/{genome_id}/{genome_id}_genomic.gff",
-        genome_id = config["genomes"]["genome_id"]["ncbi_url"].split("/")[-1])
+        genome_id = config["genomes"]["RREP4"]["ncbi_url"].split("/")[-1])
     ref_fna = expand("reference/genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
-        genome_id = config["genomes"]["genome_id"]["ncbi_url"].split("/")[-1])
+        genome_id = config["genomes"]["RREP4"]["ncbi_url"].split("/")[-1])
 else:
     feature_type = "CDS"
     if ASSEMBLER=="megahit":

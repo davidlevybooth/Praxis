@@ -6,7 +6,7 @@ ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 ASSEMBLER = config["ASSEMBLER"]
 
-genome_url = config["genomes"]["genome_id"]["ncbi_url"]
+genome_url = config["genomes"]["RREP4"]["ncbi_url"]
 
 # Select genome/transcriptome reference directories
 if genome_url:
