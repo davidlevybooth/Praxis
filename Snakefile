@@ -43,7 +43,7 @@ rule all:
     Collect the main outputs of the workflow.
     """
     input:
-        fastqc = "transcriptome/qc/fastqc/{trimmer}/{sra_id}_{num}.html",
+        expand("transcriptome/qc/fastqc/{trimmer}/{sra_id}_{num}.html", trimmer=TRIMMER, sra_id=config["sample_ids"], num=["1","2"]),
         expand(count_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER),
         expand(DE_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER, contrasts = contrasts)
 

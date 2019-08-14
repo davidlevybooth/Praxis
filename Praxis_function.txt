@@ -1,0 +1,4 @@
+
+Praxis(){
+  snakemake -p --configfile config.yaml
+}

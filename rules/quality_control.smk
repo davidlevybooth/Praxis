@@ -2,9 +2,6 @@ import os
 import pandas as pd
 from pathlib import Path
 THREADS = config["THREADS"]
-TRIMMER = config["TRIMMER"]
-ALIGNER = config["ALIGNER"]
-METHOD = config["METHOD"]
 
 # Verify that the SRA files exist
 reads = pd.read_csv('samples.tsv', delimiter = '\t')['Forward_Reads'].tolist() + pd.read_csv('samples.tsv', delimiter = '\t')['Reverse_Reads'].tolist()

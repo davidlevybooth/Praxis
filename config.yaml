@@ -3,7 +3,7 @@
 # Configure environment
 ###############################################################################
 #select tools
-METHOD: featureCounts           # featureCounts, htseq, salmon
+METHOD: salmon           # featureCounts, htseq, salmon
 ALIGNER: bt2             # none, bt2, bbmap
 TRIMMER: trimmomatic     # bbduk, trimmomatic, untrimmed
 ASSEMBLER: megahit       # megahit, trinity
@@ -11,7 +11,7 @@ THREADS: 8
 MAX_MEMORY: 50000        # bytes
 
 #Genomic alignment and quantification
-##############################################################################
+###############################################################################
 
 # Dictionary with genomes that can be aligned against.
 genomes:
@@ -19,11 +19,18 @@ genomes:
     ncbi_url: # ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/004/765/GCF_003004765.2_ASM300476v2
     directory:
 
-
+#Trimmer Adapter File
+###############################################################################
 adapter_file: utils/adapters/TruSeq3-PE-2.fa
 
+#Assembled Transcriptome Annotation
+###############################################################################
+reference:
+  name: uniref90
+  url: ftp://ftp.uniprot.org/pub/databases/uniprot/uniref/uniref90/uniref90.fasta.gz
+
 #Transcriptome alignment and quantification
-##############################################################################
+###############################################################################
 
 samples: samples.tsv
 
