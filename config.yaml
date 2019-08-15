@@ -23,7 +23,7 @@ genomes:
 ###############################################################################
 adapter_file: utils/adapters/TruSeq3-PE-2.fa
 
-#Assembled Transcriptome Annotation
+#Annotating Assembled Transcriptome
 ###############################################################################
 reference:
   name: uniref90
