@@ -1,4 +1,5 @@
 
 Praxis(){
+  python update_config.py
   snakemake -p --configfile config.yaml
 }

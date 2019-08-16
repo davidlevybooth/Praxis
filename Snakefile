@@ -15,7 +15,7 @@ ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 ASSEMBLER = config["ASSEMBLER"]
 
-genome_url = config["genomes"]["RREP4"]["ncbi_url"]
+genome_url = config["genome"]["ncbi_url"]
 samples = pd.read_csv("samples.tsv", sep="\t")
 contrasts = list(itertools.combinations(set(samples["Condition"]), 2))
 contrasts = sorted(['_'.join(map(str,sorted(pair))) for pair in contrasts])
@@ -43,9 +43,12 @@ rule all:
     Collect the main outputs of the workflow.
     """
     input:
-        expand("transcriptome/qc/fastqc/{trimmer}/{sra_id}_{num}.html", trimmer=TRIMMER, sra_id=config["sample_ids"], num=["1","2"]),
-        expand(count_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER),
-        expand(DE_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER, contrasts = contrasts)
+        expand("reference/assembled/{assembler}_out/genes_annotated.faa", assembler = ASSEMBLER),
+        expand("reference/assembled/{assembler}_out/genes_annotated.fna", assembler = ASSEMBLER),
+        expand("reference/assembled/{assembler}_out/genes_annotated.gff", assembler = ASSEMBLER),
+        # expand("transcriptome/qc/fastqc/{trimmer}/{sra_id}_{num}.html", trimmer=TRIMMER, sra_id=config["sample_ids"], num=["1","2"]),
+        # expand(count_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER),
+        # expand(DE_out, method=METHOD, aligner=ALIGNER, trimmer=TRIMMER, contrasts = contrasts)
 
 
 include: "rules/download.smk"
