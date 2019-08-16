@@ -3,20 +3,20 @@
 __authors__ = ["David Levy-Booth", "Parker Lloyd"]
 __license__ = "GPL3"
 
-import argparse
-
-parser = argparse.ArgumentParser(description='gff annotation')
-parser.add_argument('gff_file', type=str, help='Input gff')
-parser.add_argument('blast_file', type=str, help='blast output (tab seperated)')
-parser.add_argument('new_gff', type=str, help='Output gff with annotation')
-
-args = parser.parse_args()
-gff_file=args.gff_file
-blast_file=args.blast_file
-new_gff=args.new_gff
-# gff_file=snakemake.input[0]
-# blast_file=snakemake.input[1]
-# new_gff=snakemake.output[0]
+# import argparse
+#
+# parser = argparse.ArgumentParser(description='gff annotation')
+# parser.add_argument('gff_file', type=str, help='Input gff')
+# parser.add_argument('blast_file', type=str, help='blast output (tab seperated)')
+# parser.add_argument('new_gff', type=str, help='Output gff with annotation')
+#
+# args = parser.parse_args()
+# gff_file=args.gff_file
+# blast_file=args.blast_file
+# new_gff=args.new_gff
+gff_file=snakemake.input[0]
+blast_file=snakemake.input[1]
+new_gff=snakemake.output[0]
 
 with open (blast_file, "r") as annotation:
     anotation_dict = {}

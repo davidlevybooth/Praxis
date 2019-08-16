@@ -1,16 +1,16 @@
 ASSEMBLER = config["ASSEMBLER"]
 THREADS = config["THREADS"]
 
-ref_name = config["reference"]["name"]
-ref_url = config["reference"]["url"]
-zipped_file = ref_url.split('/')[-1]
+db_name = config["diamondDB"]["name"]
+db_url = config["diamondDB"]["url"]
+zipped_file = db_url.split('/')[-1]
 unzipped_file = zipped_file[:-3]
 
 rule download_uniref:
     output:
         refdb = "reference/" + unzipped_file
     run:
-        shell("wget " + ref_url + " -P reference")
+        shell("wget " + db_url + " -P reference")
         shell("gunzip reference/" + zipped_file)
 
 rule diamond_index:
@@ -28,7 +28,7 @@ rule diamond_blastp:
         refdb = "reference/" + unzipped_file + ".dmnd",
         fasta = expand("reference/assembled/{assembler}_out/genes.faa", assembler = ASSEMBLER)
     output:
-        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = ref_name)
+        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = db_name)
     run:
         shell("diamond blastp -d {input.refdb} -q {input.fasta} -o {output} -p {threads} -k 1 -f 6 qseqid stitle pident length \
         mismatch gapopen qstart qend sstart send evalue bitscore")
@@ -36,7 +36,7 @@ rule diamond_blastp:
 rule annotate_faa:
     input:
         expand("reference/assembled/{assembler}_out/genes.faa", assembler = ASSEMBLER),
-        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = ref_name)
+        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = db_name)
     output:
         expand("reference/assembled/{assembler}_out/genes_annotated.faa", assembler = ASSEMBLER)
     script:
@@ -45,7 +45,7 @@ rule annotate_faa:
 rule annotate_fna:
     input:
         expand("reference/assembled/{assembler}_out/genes.fna", assembler = ASSEMBLER),
-        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = ref_name)
+        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = db_name)
     output:
         expand("reference/assembled/{assembler}_out/genes_annotated.fna", assembler = ASSEMBLER)
     script:
@@ -54,7 +54,7 @@ rule annotate_fna:
 rule annotate_gff:
     input:
         expand("reference/assembled/{assembler}_out/genes.gff", assembler = ASSEMBLER),
-        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = ref_name)
+        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = db_name)
     output:
         expand("reference/assembled/{assembler}_out/genes_annotated.gff", assembler = ASSEMBLER)
     script:

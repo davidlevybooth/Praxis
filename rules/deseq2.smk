@@ -8,7 +8,7 @@ TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 
-samples = pd.read_csv("samples.tsv", sep="\t")
+samples = pd.read_csv('samples.tsv', sep='\t')
 contrasts = list(itertools.combinations(set(samples["Condition"]), 2))
 contrasts = sorted(['_'.join(map(str,sorted(pair))) for pair in contrasts])
 
