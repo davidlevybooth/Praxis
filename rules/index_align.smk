@@ -69,6 +69,9 @@ if "bt2" in ALIGNER:
 
 if "bbmap" in ALIGNER:
     rule bbmap_align:
+        """
+        Align a fastq file to a genome index using bbmap.
+        """
         input:
             fastq_1 = "transcriptome/reads/{trimmer}/{sra_id}_1.fastq",
             fastq_2 = "transcriptome/reads/{trimmer}/{sra_id}_2.fastq",

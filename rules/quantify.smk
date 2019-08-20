@@ -65,6 +65,9 @@ rule feature_counts_table:
         """
 
 rule salmon_index:
+    """
+    Index a reference with salmon.
+    """
     input:
         fasta = ref_fna
     output:
@@ -76,7 +79,7 @@ rule salmon_index:
 
 rule salmon_quant:
     """
-    Generate directories containing count files with salmon (quasi mode)
+    Generate directories containing count files with salmon (quasi mode).
     """
     input:
         fastq_1="transcriptome/reads/{trimmer}/{sra_id}_1.fastq",
@@ -95,6 +98,9 @@ rule salmon_quant:
 
 
 rule salmon_quant_table:
+    """
+    Generate a count table with salmon.
+    """
     input:
         expand(directory("transcriptome/salmon/{sra_id}_{trimmer}"), sra_id = config["sample_ids"], trimmer = TRIMMER)
     output:

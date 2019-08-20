@@ -19,6 +19,7 @@ METHOD = config["METHOD"]
 
 genome_url = config["genome"]["ncbi_url"]
 
+# Download reference genome is a URL is provided
 if genome_url:
     rule download_genome:
         output:
@@ -43,7 +44,6 @@ if genome_url:
                 shell("sed 's/.*\[locus_tag=\([^]]*\)\].*/>\\1/g' {output.cd_fna} > {output.prep_cd_fna}")
                 touch("{output.fna}")
             except Exception as e:
-                # print(e.returncode)
                 if e.returncode == 23:
                     print("[ERROR]: Genome URL is possibly invalid. Check URL in config file.")
                     raise

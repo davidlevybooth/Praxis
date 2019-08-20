@@ -6,6 +6,7 @@ import copy
 from os import listdir
 from os.path import isfile, join
 
+# Define flags
 parser = argparse.ArgumentParser(description='pipeline configuration')
 parser.add_argument("-d", "--method", type = str, help = "Either featureCounts, htseq, or salmon.")
 parser.add_argument("-a", "--aligner", type = str, help = "Either bt2, bbmap, or none.")
@@ -18,12 +19,13 @@ parser.add_argument("-f", "--genome_file", type = str, help = "The file containi
 
 args = parser.parse_args()
 
-# open and read the Snakemake config
+# Open and create an image of the Snakemake config
 file = "config.yaml"
 stream = open(file, "r")
 original_data = yaml.load(stream, yaml.FullLoader)
 new_data = copy.deepcopy(original_data)
 
+# Iterate through all possible flags and update corresponding field in config image if flag is present and value is accepted
 for arg in vars(args):
     if getattr(args, arg) is not None:
         if arg is "method":
@@ -70,10 +72,10 @@ for arg in vars(args):
             else:
                 raise Exception("Provided reference file is not in an accepted format (.fasta, .fa, .fna).")
 
-# update config if changes were made
+# Rewrite config file if changes were made to image
 if original_data != new_data:
     with open(file, 'w') as yaml_file:
         yaml_file.write(yaml.dump(new_data, default_flow_style=False))
 
-# close file stream
+# Close file stream
 stream.close()

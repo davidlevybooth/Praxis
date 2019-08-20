@@ -7,6 +7,9 @@ zipped_file = db_url.split('/')[-1]
 unzipped_file = zipped_file[:-3]
 
 rule download_uniref:
+    """
+    Download
+    """
     output:
         refdb = "reference/" + unzipped_file
     run:

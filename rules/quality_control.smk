@@ -3,15 +3,17 @@ import pandas as pd
 from pathlib import Path
 THREADS = config["THREADS"]
 
-# Verify that the SRA files exist
+# Verify that the RNASeq/SRA files exist
 reads = pd.read_csv('samples.tsv', delimiter = '\t')['Forward_Reads'].tolist() + pd.read_csv('samples.tsv', delimiter = '\t')['Reverse_Reads'].tolist()
 path = os.getcwd() + '/transcriptome/reads/untrimmed/'
-
 for file in reads:
     if not os.path.isfile(path + file):
         raise Exception('\'' + file + '\' is not present in \'' + path + '\'.')
 
 rule trimmomatic:
+    """
+    Trim RNASeq fasta file using trimmomatic.
+    """
     input:
         read1 = "transcriptome/reads/untrimmed/{sra_id}_1.fastq",
         read2 = "transcriptome/reads/untrimmed/{sra_id}_2.fastq"
@@ -33,6 +35,9 @@ rule trimmomatic:
       "ILLUMINACLIP:{params.adapter}:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 2> {log}"
 
 rule bbduk:
+    """
+    Trim RNASeq fasta file using bbduk.
+    """
     input:
         read1 = "transcriptome/reads/untrimmed/{sra_id}_1.fastq",
         read2 = "transcriptome/reads/untrimmed/{sra_id}_2.fastq"
@@ -53,6 +58,9 @@ rule bbduk:
         """
 
 rule fastqc:
+    """
+    Store quality scores for sequenced reads.
+    """
     input:
         "transcriptome/reads/{trimmer}/{sra_id}_{num}.fastq"
     output:
