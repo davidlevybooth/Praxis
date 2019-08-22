@@ -6,9 +6,39 @@ db_url = config["diamondDB"]["url"]
 zipped_file = db_url.split('/')[-1]
 unzipped_file = zipped_file[:-3]
 
+genome_file = config["genome"]["ref_file"]
+genes_faa = config["genome"]["genes_faa"]
+genes_fna = config["genome"]["genes_fna"]
+genes_gff = config["genome"]["genes_gff"]
+
+# Obtain the correct directory depending on the selected assembler
+if genome_file and not genes_faa and not genes_fna and not genes_gff:
+    ref = genome_file
+    dir = "/".join(genome_file.split("/")[:-2])
+else:
+    if ASSEMBLER=="megahit":
+        ref = "reference/assembled/megahit_out/final.contigs.fa"
+        dir = "reference/assembled/megahit_out"
+    elif ASSEMBLER=="trinity":
+        ref = "reference/assembled/trinity_out/Trinity.fasta"
+        dir = "reference/assembled/trinity_out"
+
+rule prodigal:
+    """
+    Obtain the predicted genes/proteins from the assembled transcriptome.
+    """
+    input:
+        reference = ref
+    output:
+        gff = expand("{directory}/genes.gff", directory = dir), #mapping file
+        faa = expand("{directory}/genes.faa", directory = dir), #protein file
+        fna = expand("{directory}/genes.fna", directory = dir)  #nucleotide file
+    run:
+        shell("prodigal -i {input.reference} -f gff -o {output.gff} -a {output.faa} -d {output.fna}")
+
 rule download_uniref:
     """
-    Download
+    Download uniref database
     """
     output:
         refdb = "reference/" + unzipped_file
@@ -17,6 +47,9 @@ rule download_uniref:
         shell("gunzip reference/" + zipped_file)
 
 rule diamond_index:
+    """
+    Index uniref database
+    """
     input:
         refdb = "reference/" + unzipped_file
     output:
@@ -29,36 +62,45 @@ rule diamond_index:
 rule diamond_blastp:
     input:
         refdb = "reference/" + unzipped_file + ".dmnd",
-        fasta = expand("reference/assembled/{assembler}_out/genes.faa", assembler = ASSEMBLER)
+        fasta = expand("{directory}/genes.faa", directory = dir)
     output:
-        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = db_name)
+        expand("{directory}/genes.{ref}.out", directory = dir, ref = db_name)
     run:
         shell("diamond blastp -d {input.refdb} -q {input.fasta} -o {output} -p {threads} -k 1 -f 6 qseqid stitle pident length \
         mismatch gapopen qstart qend sstart send evalue bitscore")
 
 rule annotate_faa:
+    """
+    Adding annotations to the fasta headers
+    """
     input:
-        expand("reference/assembled/{assembler}_out/genes.faa", assembler = ASSEMBLER),
-        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = db_name)
+        expand("{directory}/genes.faa", directory = dir),
+        expand("{directory}/genes.{ref}.out", directory = dir, ref = db_name)
     output:
-        expand("reference/assembled/{assembler}_out/genes_annotated.faa", assembler = ASSEMBLER)
+        expand("{directory}/genes_annotated.faa", directory = dir)
     script:
         "../scripts/annotate_fasta.py"
 
 rule annotate_fna:
+    """
+    Adding annotations to the fasta headers
+    """
     input:
-        expand("reference/assembled/{assembler}_out/genes.fna", assembler = ASSEMBLER),
-        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = db_name)
+        expand("{directory}/genes.fna", directory = dir),
+        expand("{directory}/genes.{ref}.out", directory = dir, ref = db_name)
     output:
-        expand("reference/assembled/{assembler}_out/genes_annotated.fna", assembler = ASSEMBLER)
+        expand("{directory}/genes_annotated.fna", directory = dir)
     script:
         "../scripts/annotate_fasta.py"
 
 rule annotate_gff:
+    """
+    Adding annotations to the gff headers
+    """
     input:
-        expand("reference/assembled/{assembler}_out/genes.gff", assembler = ASSEMBLER),
-        expand("reference/assembled/{assembler}_out/genes.{ref}.out", assembler = ASSEMBLER, ref = db_name)
+        expand("{directory}/genes.gff", directory = dir),
+        expand("{directory}/genes.{ref}.out", directory = dir, ref = db_name)
     output:
-        expand("reference/assembled/{assembler}_out/genes_annotated.gff", assembler = ASSEMBLER)
+        expand("{directory}/genes_annotated.gff", directory = dir)
     script:
         "../scripts/annotate_gff.py"

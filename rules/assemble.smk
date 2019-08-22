@@ -51,23 +51,3 @@ rule trinity_assemble:
         ref = "{params.out}/Trinity.fasta"
     run:
         shell("Trinity --left {params.left} --right {params.right} -o {params.out} --max_memory 30G --CPU {threads}")
-
-# Obtain the correct directory depending on the selected assembler
-def select_reference():
-    if ASSEMBLER=="megahit":
-        return "reference/assembled/megahit_out/final.contigs.fa"
-    elif ASSEMBLER=="trinity":
-        return "reference/assembled/trinity_out/Trinity.fasta"
-
-rule prodigal:
-    """
-    Obtain the predicted genes/proteins from the assembled transcriptome.
-    """
-    input:
-        ref = select_reference()
-    output:
-        gff = expand("reference/assembled/{assembler}_out/genes.gff", assembler = ASSEMBLER), #mapping file
-        faa = expand("reference/assembled/{assembler}_out/genes.faa", assembler = ASSEMBLER), #protein file
-        fna = expand("reference/assembled/{assembler}_out/genes.fna", assembler = ASSEMBLER)  #nucleotide file
-    run:
-        shell("prodigal -i {input.ref} -f gff -o {output.gff} -a {output.faa} -d {output.fna}")

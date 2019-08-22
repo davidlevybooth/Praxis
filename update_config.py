@@ -16,6 +16,10 @@ parser.add_argument("-t", "--threads", type = int, help = "The number of threads
 parser.add_argument("-m", "--max_memory", type = int, help = "The amount of memory provided to the assembler. Enter in byte format.")
 parser.add_argument("-u", "--genome_url", type = str, help = "The NCBI url from which the reference genome can be downloaded.")
 parser.add_argument("-f", "--genome_file", type = str, help = "The file containing the reference genome.")
+parser.add_argument("-f", "--genes_faa", type = str, help = "Predicted genes in .faa format.")
+parser.add_argument("-f", "--genes_fna", type = str, help = "Predicted genes in .fna format.")
+parser.add_argument("-f", "--genes_gff", type = str, help = "Predicted genes in .gff format.")
+
 
 args = parser.parse_args()
 
@@ -68,9 +72,24 @@ for arg in vars(args):
             new_data["genome"]["ncbi_url"] = getattr(args, arg)
         elif arg is "genome_file":
             if getattr(args, arg).split(".")[-1] in ["fasta", "fa", "fna"]:
-                new_data["genome"]["file"] = getattr(args, arg)
+                new_data["genome"]["ref_file"] = getattr(args, arg)
             else:
                 raise Exception("Provided reference file is not in an accepted format (.fasta, .fa, .fna).")
+        elif arg is "genes_faa":
+            if getattr(args, arg).split(".")[-1] == "faa":
+                new_data["genome"]["genes_faa_file"] = getattr(args, arg)
+            else:
+                raise Exception("Predicted genes file is not in an accepted format (.faa).")
+        elif arg is "genes_fna":
+            if getattr(args, arg).split(".")[-1] == "fna":
+                new_data["genome"]["genes_fna_file"] = getattr(args, arg)
+            else:
+                raise Exception("Predicted genes file is not in an accepted format (.fna).")
+        elif arg is "genes_gff":
+            if getattr(args, arg).split(".")[-1] == "gff":
+                new_data["genome"]["genes_gff_file"] = getattr(args, arg)
+            else:
+                raise Exception("Predicted genes file is not in an accepted format (.gff).")
 
 # Rewrite config file if changes were made to image
 if original_data != new_data:

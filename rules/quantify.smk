@@ -5,21 +5,29 @@ TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 
+genome_url = config["genome"]["ncbi_url"]
+genome_file = config["genome"]["ref_file"]
+
 # Select genome/transcriptome ref_gff directories
-if genome_url:
+if genome_file:
     feature_type = "gene"
-    ref_gff = expand("reference/genome/{genome_id}/{genome_id}_genomic.gff",
-        genome_id = config["genome"]["ncbi_url"].split("/")[-1])
-    ref_fna = expand("reference/genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
-        genome_id = config["genome"]["ncbi_url"].split("/")[-1])
+    ref_gff = config["genome"]["genes_gff"]
+    ref_fna = config["genome"]["genes_fna"]
 else:
-    feature_type = "CDS"
-    if ASSEMBLER=="megahit":
-        ref_gff = "reference/assembled/megahit_out/genes_annotated.gff"
-        ref_fna = "reference/assembled/megahit_out/genes_annotated.fna"
-    elif ASSEMBLER=="trinity":
-        ref_gff = "reference/assembled/trinity_out/genes_annotated.gff"
-        ref_fna = "reference/assembled/trinity_out/genes_annotated.fna"
+    if genome_url:
+        feature_type = "gene"
+        ref_gff = expand("reference/genome/{genome_id}/{genome_id}_genomic.gff",
+            genome_id = config["genome"]["ncbi_url"].split("/")[-1])
+        ref_fna = expand("reference/genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
+            genome_id = config["genome"]["ncbi_url"].split("/")[-1])
+    else:
+        feature_type = "CDS"
+        if ASSEMBLER=="megahit":
+            ref_gff = "reference/assembled/megahit_out/genes_annotated.gff"
+            ref_fna = "reference/assembled/megahit_out/genes_annotated.fna"
+        elif ASSEMBLER=="trinity":
+            ref_gff = "reference/assembled/trinity_out/genes_annotated.gff"
+            ref_fna = "reference/assembled/trinity_out/genes_annotated.fna"
 
 rule htseq_count_table:
     """

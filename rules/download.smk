@@ -18,9 +18,10 @@ ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 
 genome_url = config["genome"]["ncbi_url"]
+genome_file = config["genome"]["ref_file"]
 
 # Download reference genome is a URL is provided
-if genome_url:
+if genome_url and not genome_file:
     rule download_genome:
         output:
             gff = "reference/genome/{genome_id}/{genome_id}_genomic.gff",

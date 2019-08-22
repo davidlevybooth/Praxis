@@ -7,19 +7,24 @@ METHOD = config["METHOD"]
 ASSEMBLER = config["ASSEMBLER"]
 
 genome_url = config["genome"]["ncbi_url"]
+genome_file = config["genome"]["ref_file"]
 
 # Select genome/transcriptome reference directories
-if genome_url:
-    reference = expand("reference/genome/{genome_id}/{genome_id}_genomic.fna",
-        genome_id = genome_url.split("/")[-1])
-    indexBase = "intermediate/genome"
+if genome_file:
+    reference = genome_file
+    indexBase = "intermediate/genome_provided"
 else:
-    if ASSEMBLER=="megahit":
-        reference = "reference/assembled/megahit_out/final.contigs.fa"
-        indexBase = "intermediate/megahit/transcriptome"
-    elif ASSEMBLER=="trinity":
-        reference = "reference/assembled/trinity_out/Trinity.fasta"
-        indexBase = "intermediate/trinity/transcriptome"
+    if genome_url:
+        reference = expand("reference/genome/{genome_id}/{genome_id}_genomic.fna",
+            genome_id = genome_url.split("/")[-1])
+        indexBase = "intermediate/genome_downloaded"
+    else:
+        if ASSEMBLER=="megahit":
+            reference = "reference/assembled/megahit_out/final.contigs.fa"
+            indexBase = "intermediate/megahit/transcriptome"
+        elif ASSEMBLER=="trinity":
+            reference = "reference/assembled/trinity_out/Trinity.fasta"
+            indexBase = "intermediate/trinity/transcriptome"
 
 if "bt2" in ALIGNER:
     rule bt2_index:
