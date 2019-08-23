@@ -7,12 +7,13 @@ METHOD = config["METHOD"]
 
 genome_url = config["genome"]["ncbi_url"]
 genome_file = config["genome"]["ref_file"]
+ref_dir = "/".join(genome_file.split("/")[:-2])
 
 # Select genome/transcriptome ref_gff directories
 if genome_file:
     feature_type = "gene"
-    ref_gff = config["genome"]["genes_gff"]
-    ref_fna = config["genome"]["genes_fna"]
+    ref_gff = ref_dir + "/genes_annotated.gff"
+    ref_fna = ref_dir + "/genes_annotated.fna"
 else:
     if genome_url:
         feature_type = "gene"

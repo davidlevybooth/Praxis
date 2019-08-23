@@ -7,12 +7,9 @@ zipped_file = db_url.split('/')[-1]
 unzipped_file = zipped_file[:-3]
 
 genome_file = config["genome"]["ref_file"]
-genes_faa = config["genome"]["genes_faa"]
-genes_fna = config["genome"]["genes_fna"]
-genes_gff = config["genome"]["genes_gff"]
 
 # Obtain the correct directory depending on the selected assembler
-if genome_file and not genes_faa and not genes_fna and not genes_gff:
+if genome_file:
     ref = genome_file
     dir = "/".join(genome_file.split("/")[:-2])
 else:

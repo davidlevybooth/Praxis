@@ -17,9 +17,6 @@ MAX_MEMORY: 50000        # bytes
 genome:
   ncbi_url: # ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/004/765/GCF_003004765.2_ASM300476v2
   ref_file:
-  genes_faa_file:
-  genes_fna_file:
-  genes_gff_file:
 
 #Trimmer Adapter File
 ###############################################################################
