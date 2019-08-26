@@ -72,4 +72,4 @@ rule fastqc:
     log:
         "log/fastqc/{trimmer}/{sra_id}_{num}.log"
     script:
-        "scripts/fastqc.py"
+        "../scripts/fastqc.py"

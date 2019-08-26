@@ -1,8 +1,7 @@
-#configs
+# config.yaml
 
-# Configure environment
+# Select Tools
 ###############################################################################
-#select tools
 METHOD: salmon           # featureCounts, htseq, salmon
 ALIGNER: bt2             # none, bt2, bbmap
 TRIMMER: trimmomatic     # bbduk, trimmomatic, untrimmed
@@ -10,7 +9,7 @@ ASSEMBLER: megahit       # megahit, trinity
 THREADS: 8
 MAX_MEMORY: 50000        # bytes
 
-#Genomic alignment and quantification
+# Genomic alignment and quantification
 ###############################################################################
 
 # Dictionary with genomes that can be aligned against.
@@ -18,45 +17,21 @@ genome:
   ncbi_url: # ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/004/765/GCF_003004765.2_ASM300476v2
   ref_file:
 
-#Trimmer Adapter File
+# Trimmer Adapter File
 ###############################################################################
 adapter_file: utils/adapters/TruSeq3-PE-2.fa
 
-#Annotating Assembled Transcriptome
+# Annotating Assembled Transcriptome
 ###############################################################################
 diamondDB:
   name: uniref90
   url: ftp://ftp.uniprot.org/pub/databases/uniprot/uniref/uniref90/uniref90.fasta.gz
 
-#Transcriptome alignment and quantification
+# RNASeq Data
 ###############################################################################
 
 samples: samples.tsv
 
-# List of SRA run ids to analyse
-# RREP4 RNA Reads
-# GEO ACC     SRA ACC     Sample Name
-# GSM3059620 	SRR6877528  Ethylphenol_1
-# GSM3059621 	SRR6877529  Ethylphenol_2
-# GSM3059622 	SRR6877530  Ethylphenol_3
-# GSM3059623 	SRR6877530  Propylguaiacol_1
-# GSM3059624 	SRR6877530  Propylguaiacol_2
-# GSM3059625 	SRR6877530  Propylguaiacol_3
-# GSM3059626 	SRR6877530  Succinate_1
-# GSM3059627 	SRR6877530  Succinate_2
-# GSM3059628 	SRR6877530  Succinate_3
-
-#sample_name: [Ethylphenol_1, Ethylphenol_2, Ethylphenol_3,
-#             Propylguaiacol_1, Propylguaiacol_2, Propylguaiacol_3,
-#             Succinate_1, Succinate_2, Succinate_3]
-
-#sample_geo: [GSM3059620, GSM3059621, GSM3059622,
-#            GSM3059623, GSM3059624, GSM3059625,
-#            GSM3059626, GSM3059627, GSM3059628]
-
 sample_ids: [SRR6877528, SRR6877529,SRR6877530,
              SRR6877531, SRR6877532, SRR6877533,
              SRR6877534, SRR6877535, SRR6877536]
-
-#for testing
-# sample_ids: [SRR6877529]
