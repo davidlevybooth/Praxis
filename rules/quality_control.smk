@@ -4,11 +4,12 @@ from pathlib import Path
 THREADS = config["THREADS"]
 
 # Verify that the RNASeq/SRA files exist
-reads = pd.read_csv('samples.tsv', delimiter = '\t')['Forward_Reads'].tolist() + pd.read_csv('samples.tsv', delimiter = '\t')['Reverse_Reads'].tolist()
-path = os.getcwd() + '/transcriptome/reads/untrimmed/'
-for file in reads:
-    if not os.path.isfile(path + file):
-        raise Exception('\'' + file + '\' is not present in \'' + path + '\'.')
+if not config["sample_ids"]:
+    reads = pd.read_csv('samples.tsv', delimiter = '\t')['Forward_Reads'].tolist() + pd.read_csv('samples.tsv', delimiter = '\t')['Reverse_Reads'].tolist()
+    path = os.getcwd() + '/transcriptome/reads/untrimmed/'
+    for file in reads:
+        if not os.path.isfile(path + file):
+            raise Exception('\'' + file + '\' is not present in \'' + path + '\'.')
 
 rule trimmomatic:
     """

@@ -7,7 +7,8 @@ METHOD = config["METHOD"]
 
 genome_url = config["genome"]["ncbi_url"]
 genome_file = config["genome"]["ref_file"]
-ref_dir = "/".join(genome_file.split("/")[:-2])
+if genome_file:
+    ref_dir = "/".join(genome_file.split("/")[:-2])
 
 # Select genome/transcriptome ref_gff directories
 if genome_file:

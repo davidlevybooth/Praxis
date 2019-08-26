@@ -62,7 +62,7 @@ rule get_SRA_by_accession:
         "benchmarks/{sra_id}.download.benchmark.txt"
     shell:
         """
-        fasterq-dump {wildcards.sra_id} -O transcriptome/reads --split-files
+        fastq-dump {wildcards.sra_id} -O transcriptome/reads --split-files
         # This clears a cache where SRA Tools reserves a lot of space
         cache-mgr --clear >/dev/null 2>&1
         """
