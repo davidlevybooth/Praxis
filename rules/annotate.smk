@@ -14,24 +14,26 @@ if genome_file:
     dir = "/".join(genome_file.split("/")[:-2])
 else:
     if ASSEMBLER=="megahit":
-        ref = "reference/assembled/megahit_out/final.contigs.fa"
-        dir = "reference/assembled/megahit_out"
+        ref = "final.contigs.fa"
+        dir = "reference/assembled/megahit_genes"
     elif ASSEMBLER=="trinity":
-        ref = "reference/assembled/trinity_out/Trinity.fasta"
-        dir = "reference/assembled/trinity_out"
+        ref = "Trinity.fasta"
+        dir = "reference/assembled/trinity_genes"
 
 rule prodigal:
     """
     Obtain the predicted genes/proteins from the assembled transcriptome.
     """
     input:
-        reference = ref
+        assembly = expand("reference/assembled/{assembler}_out", assembler = ASSEMBLER)
+    params:
+        reference = "{input.assembly}/" + ref
     output:
         gff = expand("{directory}/genes.gff", directory = dir), #mapping file
         faa = expand("{directory}/genes.faa", directory = dir), #protein file
         fna = expand("{directory}/genes.fna", directory = dir)  #nucleotide file
     run:
-        shell("prodigal -i {input.reference} -f gff -o {output.gff} -a {output.faa} -d {output.fna}")
+        shell("prodigal -i {params.reference} -f gff -o {output.gff} -a {output.faa} -d {output.fna}")
 
 rule download_uniref:
     """

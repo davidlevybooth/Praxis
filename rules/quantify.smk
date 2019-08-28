@@ -25,11 +25,11 @@ else:
     else:
         feature_type = "CDS"
         if ASSEMBLER=="megahit":
-            ref_gff = "reference/assembled/megahit_out/genes_annotated.gff"
-            ref_fna = "reference/assembled/megahit_out/genes_annotated.fna"
+            ref_gff = "reference/assembled/megahit_genes/genes_annotated.gff"
+            ref_fna = "reference/assembled/megahit_genes/genes_annotated.fna"
         elif ASSEMBLER=="trinity":
-            ref_gff = "reference/assembled/trinity_out/genes_annotated.gff"
-            ref_fna = "reference/assembled/trinity_out/genes_annotated.fna"
+            ref_gff = "reference/assembled/trinity_genes/genes_annotated.gff"
+            ref_fna = "reference/assembled/trinity_genes/genes_annotated.fna"
 
 rule htseq_count_table:
     """
