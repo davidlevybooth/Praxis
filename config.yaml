@@ -7,7 +7,7 @@ ALIGNER: bt2             # none, bt2, bbmap
 TRIMMER: trimmomatic     # bbduk, trimmomatic, untrimmed
 ASSEMBLER: megahit       # megahit, trinity
 THREADS: 8
-MAX_MEMORY: 50000        # bytes
+MAX_MEMORY: 300000000000        # bytes
 
 # Genomic alignment and quantification
 ###############################################################################
@@ -32,6 +32,6 @@ diamondDB:
 
 samples: samples.tsv
 
-sample_ids: [SRR6877528, SRR6877529,SRR6877530,
+sample_ids: [SRR6877528, SRR6877529, SRR6877530,
              SRR6877531, SRR6877532, SRR6877533,
              SRR6877534, SRR6877535, SRR6877536]

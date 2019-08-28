@@ -21,7 +21,9 @@ dependencies:
   - parallel =20181022
   - salmon =0.12.0
   - trimmomatic =0.38
-  - bbmap = 38.22
+  - bbmap =38.22
+  - megahit =1.1.3
+  - trinity =2.8.5
 # Rpacakges
   - r-base =3.4.1
   - bioconductor-deseq2 =1.18.1
