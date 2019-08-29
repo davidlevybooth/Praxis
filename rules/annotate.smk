@@ -27,7 +27,7 @@ rule prodigal:
     input:
         assembly = expand("reference/assembled/{assembler}_out", assembler = ASSEMBLER)
     params:
-        reference = "{input.assembly}/" + ref
+        reference = lambda wildcards, input: input.assembly[0] + "/" + ref
     output:
         gff = expand("{directory}/genes.gff", directory = dir), #mapping file
         faa = expand("{directory}/genes.faa", directory = dir), #protein file

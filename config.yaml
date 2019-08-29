@@ -7,7 +7,7 @@ ALIGNER: bt2             # none, bt2, bbmap
 TRIMMER: trimmomatic     # bbduk, trimmomatic, untrimmed
 ASSEMBLER: megahit       # megahit, trinity
 THREADS: 8
-MAX_MEMORY: 300000000000        # bytes
+MAX_MEMORY: 30000000000        # bytes
 
 # Genomic alignment and quantification
 ###############################################################################
