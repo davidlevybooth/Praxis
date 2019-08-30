@@ -1,10 +1,10 @@
-SRA	Sample	Condition
-SRR6877528	Ethylphenol_1	Ethylphenol
-SRR6877529	Ethylphenol_2	Ethylphenol
-SRR6877530	Ethylphenol_3	Ethylphenol
-SRR6877531	Propylguaiacol_1	Propylguaiacol
-SRR6877532	Propylguaiacol_2	Propylguaiacol
-SRR6877533	Propylguaiacol_3	Propylguaiacol
-SRR6877534	Succinate_1	Succinate
-SRR6877535	Succinate_2	Succinate
-SRR6877536	Succinate_3	Succinate
+SRA	Sample	Condition	Forward_Reads	Reverse_Reads
+SRR6877528	Ethylphenol_1	Ethylphenol	SRR6877528_1.fastq	SRR6877528_2.fastq
+SRR6877529	Ethylphenol_2	Ethylphenol	SRR6877529_1.fastq	SRR6877529_2.fastq
+SRR6877530	Ethylphenol_3	Ethylphenol	SRR6877530_1.fastq	SRR6877530_2.fastq
+SRR6877531	Propylguaiacol_1	Propylguaiacol	SRR6877531_1.fastq	SRR6877531_2.fastq
+SRR6877532	Propylguaiacol_2	Propylguaiacol	SRR6877532_1.fastq	SRR6877532_2.fastq
+SRR6877533	Propylguaiacol_3	Propylguaiacol	SRR6877533_1.fastq	SRR6877533_2.fastq
+SRR6877534	Succinate_1	Succinate	SRR6877534_1.fastq	SRR6877534_2.fastq
+SRR6877535	Succinate_2	Succinate	SRR6877535_1.fastq	SRR6877535_2.fastq
+SRR6877536	Succinate_3	Succinate	SRR6877536_1.fastq	SRR6877536_2.fastq

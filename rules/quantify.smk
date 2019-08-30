@@ -5,21 +5,31 @@ TRIMMER = config["TRIMMER"]
 ALIGNER = config["ALIGNER"]
 METHOD = config["METHOD"]
 
+genome_url = config["genome"]["ncbi_url"]
+genome_file = config["genome"]["ref_file"]
+if genome_file:
+    ref_dir = "/".join(genome_file.split("/")[:-2])
+
 # Select genome/transcriptome ref_gff directories
-if genome_url:
+if genome_file:
     feature_type = "gene"
-    ref_gff = expand("reference/genome/{genome_id}/{genome_id}_genomic.gff",
-        genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
-    ref_fna = expand("reference/genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
-        genome_id = config["genomes"][config["genome_id"]]["url"].split("/")[-1])
+    ref_gff = ref_dir + "/genes_annotated.gff"
+    ref_fna = ref_dir + "/genes_annotated.fna"
 else:
-    feature_type = "CDS"
-    if ASSEMBLER=="megahit":
-        ref_gff = "reference/assembled/megahit_out/genes_annotated.gff"
-        ref_fna = "reference/assembled/megahit_out/genes_annotated.fna"
-    elif ASSEMBLER=="trinity":
-        ref_gff = "reference/assembled/trinity_out/genes_annotated.gff"
-        ref_fna = "reference/assembled/trinity_out/genes_annotated.fna"
+    if genome_url:
+        feature_type = "gene"
+        ref_gff = expand("reference/genome/{genome_id}/{genome_id}_genomic.gff",
+            genome_id = config["genome"]["ncbi_url"].split("/")[-1])
+        ref_fna = expand("reference/genome/{genome_id}/{genome_id}_cds_from_genomic_salmon.fna",
+            genome_id = config["genome"]["ncbi_url"].split("/")[-1])
+    else:
+        feature_type = "CDS"
+        if ASSEMBLER=="megahit":
+            ref_gff = "reference/assembled/megahit_genes/genes_annotated.gff"
+            ref_fna = "reference/assembled/megahit_genes/genes_annotated.fna"
+        elif ASSEMBLER=="trinity":
+            ref_gff = "reference/assembled/trinity_genes/genes_annotated.gff"
+            ref_fna = "reference/assembled/trinity_genes/genes_annotated.fna"
 
 rule htseq_count_table:
     """
@@ -65,6 +75,9 @@ rule feature_counts_table:
         """
 
 rule salmon_index:
+    """
+    Index a reference with salmon.
+    """
     input:
         fasta = ref_fna
     output:
@@ -76,7 +89,7 @@ rule salmon_index:
 
 rule salmon_quant:
     """
-    Generate directories containing count files with salmon (quasi mode)
+    Generate directories containing count files with salmon (quasi mode).
     """
     input:
         fastq_1="transcriptome/reads/{trimmer}/{sra_id}_1.fastq",
@@ -95,6 +108,9 @@ rule salmon_quant:
 
 
 rule salmon_quant_table:
+    """
+    Generate a count table with salmon.
+    """
     input:
         expand(directory("transcriptome/salmon/{sra_id}_{trimmer}"), sra_id = config["sample_ids"], trimmer = TRIMMER)
     output:

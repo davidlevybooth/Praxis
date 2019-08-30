@@ -3,12 +3,12 @@
 __authors__ = ["David Levy-Booth", "Parker Lloyd"]
 __license__ = "GPL3"
 
-# fasta_file=snakemake.input[0]
-# blast_file=snakemake.input[1]
-# new_fasta=snakemake.output[0]
-fasta_file="/home/david/Liard/metaWRAP/Liard_Binning_refiner_outputs/BR_prodigal/Liard_36/Liard_36.clean.faa"
-blast_file="/home/david/Liard/metaWRAP/Liard_Binning_refiner_outputs/BR_prodigal/Liard_36/Liard_36.dmnd.out.reduced"
-new_fasta="/home/david/Liard/metaWRAP/Liard_Binning_refiner_outputs/BR_prodigal/Liard_36/Liard_36.clean.annotated.faa"
+fasta_file=snakemake.input[0]
+blast_file=snakemake.input[1]
+new_fasta=snakemake.output[0]
+# fasta_file="/home/david/Liard/metaWRAP/Liard_Binning_refiner_outputs/BR_prodigal/Liard_36/Liard_36.clean.faa"
+# blast_file="/home/david/Liard/metaWRAP/Liard_Binning_refiner_outputs/BR_prodigal/Liard_36/Liard_36.dmnd.out.reduced"
+# new_fasta="/home/david/Liard/metaWRAP/Liard_Binning_refiner_outputs/BR_prodigal/Liard_36/Liard_36.clean.annotated.faa"
 
 with open (blast_file, "r") as annotation:
     anotation_dict = {}
