@@ -10,7 +10,7 @@ Steps to Initialize:
 
 Download or clone repository:
 
-git clone https://github.com/levybooth/Rhodococcus_Transcriptomics.git
+git clone https://github.com/davidlevybooth/Praxis.git
 
 Run init.sh to create Praxis function and conda environment:
 
