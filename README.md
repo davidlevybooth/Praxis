@@ -65,8 +65,7 @@ Declaring a reference:
 
 There are 3 ways to provide a reference to the pipeline. The path to a genome file can be provided using the corresponding flag (-f), the NCBI URL can be provided for the pipeline to download the genome (-u), or the pipeline can use the provided RNASeq reads located in the directory transcriptome/reads/untrimmed to assemble a reference transcriptome.
 
-If the path to a user provided genome file is specified, it will always be used as the reference, regardless of any other options available. To download a reference from NCBI, remove the path to the genome file and specify the NCBI URL (Praxis -f -u [ncbi_url]). To assemble a reference transcriptome, make sure both the genome file and NCBI URL are not specified, make sure there are RNASeq reads located in the directory specified in transcriptome/reads/untrimmed, and make sure the desired assembler is chosen.
- 
+If the path to a user provided genome file is specified, it will always be used as the reference, regardless of any other options available. To download a reference from NCBI, remove the path to the genome file and specify the NCBI URL (Praxis -f -u [ncbi_url]). To assemble a reference transcriptome, make sure both the genome file and NCBI URL are not specified, and make sure the desired assembler is chosen. 
 User Provided RNASeq Reads:
 
 The columns in the samples.tsv file must be updated to include the file names for each of the forward and reverse reads. 
