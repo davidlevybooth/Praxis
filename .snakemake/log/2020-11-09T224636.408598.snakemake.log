@@ -1,4 +1,0 @@
-WildcardError in line 47 of /home/david/SBC/LE3/Praxis/rules/quantify.smk:
-No values given for wildcard 'sra_id'.
-  File "/home/david/SBC/LE3/Praxis/Snakefile", line 69, in <module>
-  File "/home/david/SBC/LE3/Praxis/rules/quantify.smk", line 47, in <module>

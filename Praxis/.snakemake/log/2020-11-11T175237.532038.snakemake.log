@@ -1,4 +1,0 @@
-Building DAG of jobs...
-MissingInputException in line 15 of /home/david/SBC/LE3/Praxis/Praxis/Snakefile:
-Missing input files for rule map_paired_end:
-4H1_1.fastq

@@ -1,4 +1,0 @@
-Exception in line 15 of /home/david/SBC/LE3/Praxis/rules/quality_control.smk:
-'EGfast-EG1_1.fastq' is not present in '/transcriptome/reads/untrimmed/'.
-  File "/home/david/SBC/LE3/Praxis/Snakefile", line 68, in <module>
-  File "/home/david/SBC/LE3/Praxis/rules/quality_control.smk", line 15, in <module>

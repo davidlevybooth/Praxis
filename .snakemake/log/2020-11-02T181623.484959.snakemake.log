@@ -1,4 +1,0 @@
-NameError in line 42 of /home/david/SBC/LE3/Praxis/rules/quantify.smk:
-name 'ref_gff' is not defined
-  File "/home/david/SBC/LE3/Praxis/Snakefile", line 43, in <module>
-  File "/home/david/SBC/LE3/Praxis/rules/quantify.smk", line 42, in <module>

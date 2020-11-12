@@ -1,5 +1,0 @@
-The flag 'directory' used in rule salmon_quant is only valid for outputs, not inputs.
-WorkflowError in line 115 of /home/david/SBC/LE3/Praxis/rules/quantify.smk:
-Flags in file patterns given to expand() are invalid. Flags (e.g. temp(), directory()) have to be applied outside of expand (e.g. 'temp(expand("plots/{sample}.pdf", sample=SAMPLES))').
-  File "/home/david/SBC/LE3/Praxis/Snakefile", line 43, in <module>
-  File "/home/david/SBC/LE3/Praxis/rules/quantify.smk", line 115, in <module>

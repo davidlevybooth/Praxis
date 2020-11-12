@@ -1,3 +1,0 @@
-KeyError in line 13 of /home/david/SBC/LE3/Praxis/Snakefile:
-'TRIMMER'
-  File "/home/david/SBC/LE3/Praxis/Snakefile", line 13, in <module>

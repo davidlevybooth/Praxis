@@ -1,4 +1,0 @@
-KeyError in line 48 of /home/david/SBC/LE3/Praxis/rules/quantify.smk:
-'sample_ids'
-  File "/home/david/SBC/LE3/Praxis/Snakefile", line 69, in <module>
-  File "/home/david/SBC/LE3/Praxis/rules/quantify.smk", line 48, in <module>
