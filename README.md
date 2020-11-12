@@ -69,8 +69,6 @@ If the path to a user provided genome file is specified, it will always be used 
  
 User Provided RNASeq Reads:
 
-If you are providing your own RNASeq fastq files, the filenames will need a certain format. The pipeline expects a particular naming convention for forward and reverse RNASeq reads. Forward reads must have the form {xxx}_1.fastq and reverse reads must have the form {xxx}_2.fastq. 
-
 The columns in the samples.tsv file must be updated to include the file names for each of the forward and reverse reads. 
  
  
