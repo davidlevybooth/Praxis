@@ -1,0 +1,5 @@
+Building DAG of jobs...
+File path /home/david/SBC/GD1/rawData//home/david/SBC/GD1/rawData/4H1_1.fastq contains double '/'. This is likely unintended. It can also lead to inconsistent results of the file-matching approach used by Snakemake.
+MissingInputException in line 29 of /home/david/SBC/LE3/Praxis/Praxis/Snakefile:
+Missing input files for rule trimmomatic:
+/home/david/SBC/GD1/rawData//home/david/SBC/GD1/rawData/4H1_1.fastq

@@ -1,0 +1,5 @@
+PermissionError in line 4 of /home/david/SBC/LE3/Praxis/Praxis/Snakefile:
+[Errno 13] Permission denied: '/output'
+  File "/home/david/SBC/LE3/Praxis/Praxis/Snakefile", line 4, in <module>
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.7/os.py", line 213, in makedirs
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.7/os.py", line 223, in makedirs

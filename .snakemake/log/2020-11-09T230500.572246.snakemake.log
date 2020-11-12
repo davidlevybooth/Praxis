@@ -1,0 +1,10 @@
+Building DAG of jobs...
+AmbiguousRuleException:
+Rules trimmomatic and bbduk are ambiguous for the file transcriptome/reads/trimmomatic/wt-Ac3_1.fastq.
+Consider starting rule output with a unique prefix or constrain your wildcards.
+Wildcards:
+	trimmomatic: sra_id=wt-Ac3
+	bbduk: sra_id=wt-Ac3
+Expected input files:
+	trimmomatic: transcriptome/reads/untrimmed/wt-Ac3_1.fastq transcriptome/reads/untrimmed/wt-Ac3_2.fastq
+	bbduk: transcriptome/reads/untrimmed/wt-Ac3_1.fastq transcriptome/reads/untrimmed/wt-Ac3_2.fastq

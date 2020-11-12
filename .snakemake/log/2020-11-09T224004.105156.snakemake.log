@@ -1,0 +1,3 @@
+KeyError in line 33 of /home/david/SBC/LE3/Praxis/Snakefile:
+'sample_directory'
+  File "/home/david/SBC/LE3/Praxis/Snakefile", line 33, in <module>

@@ -1,0 +1,9 @@
+Building DAG of jobs...
+InputFunctionException in line 12 of /home/david/SBC/LE3/Praxis/Praxis/Snakefile:
+Error:
+  AttributeError: 'DataFrame' object has no attribute 'Unit'
+Wildcards:
+  sample=4H1
+Traceback:
+  File "/home/david/SBC/LE3/Praxis/Praxis/Snakefile", line 14, in <lambda>
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.7/site-packages/pandas/core/generic.py", line 5139, in __getattr__

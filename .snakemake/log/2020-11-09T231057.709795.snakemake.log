@@ -1,0 +1,4 @@
+NameError in line 25 of /home/david/SBC/LE3/Praxis/rules/quality_control.smk:
+name 'trimmed_directory' is not defined
+  File "/home/david/SBC/LE3/Praxis/Snakefile", line 64, in <module>
+  File "/home/david/SBC/LE3/Praxis/rules/quality_control.smk", line 25, in <module>

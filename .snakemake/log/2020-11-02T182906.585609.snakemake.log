@@ -1,0 +1,84 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 24
+Rules claiming more threads will be scaled down.
+Conda environments: ignored
+Job counts:
+	count	jobs
+	1	all
+	1	deseq2
+	12	salmon_quant
+	1	salmon_quant_table
+	12	trimmomatic
+	27
+
+[Mon Nov  2 18:29:07 2020]
+rule trimmomatic:
+    input: transcriptome/reads/untrimmed/EGfast_EG2_1.fastq, transcriptome/reads/untrimmed/EGfast_EG2_2.fastq
+    output: transcriptome/reads/trimmomatic/EGfast_EG2_1.fastq, transcriptome/reads/trimmomatic/EGfast_EG2_2.fastq, transcriptome/reads/unpaired/EGfast_EG2_1.fastq, transcriptome/reads/unpaired/EGfast_EG2_2.fastq
+    log: log/EGfast_EG2.trimmomatic.log
+    jobid: 17
+    benchmark: benchmarks/EGfast_EG2.trimmomatic.benchmark.txt
+    wildcards: sra_id=EGfast_EG2
+    threads: 8
+
+trimmomatic PE -threads 8 -phred33 transcriptome/reads/untrimmed/EGfast_EG2_1.fastq transcriptome/reads/untrimmed/EGfast_EG2_2.fastq transcriptome/reads/trimmomatic/EGfast_EG2_1.fastq transcriptome/reads/unpaired/EGfast_EG2_1.fastq transcriptome/reads/trimmomatic/EGfast_EG2_2.fastq transcriptome/reads/unpaired/EGfast_EG2_2.fastq ILLUMINACLIP:utils/adapters/TruSeq3-PE-2.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 2> log/EGfast_EG2.trimmomatic.log
+
+[Mon Nov  2 18:29:07 2020]
+rule trimmomatic:
+    input: transcriptome/reads/untrimmed/EGfast_EG3_1.fastq, transcriptome/reads/untrimmed/EGfast_EG3_2.fastq
+    output: transcriptome/reads/trimmomatic/EGfast_EG3_1.fastq, transcriptome/reads/trimmomatic/EGfast_EG3_2.fastq, transcriptome/reads/unpaired/EGfast_EG3_1.fastq, transcriptome/reads/unpaired/EGfast_EG3_2.fastq
+    log: log/EGfast_EG3.trimmomatic.log
+    jobid: 18
+    benchmark: benchmarks/EGfast_EG3.trimmomatic.benchmark.txt
+    wildcards: sra_id=EGfast_EG3
+    threads: 8
+
+trimmomatic PE -threads 8 -phred33 transcriptome/reads/untrimmed/EGfast_EG3_1.fastq transcriptome/reads/untrimmed/EGfast_EG3_2.fastq transcriptome/reads/trimmomatic/EGfast_EG3_1.fastq transcriptome/reads/unpaired/EGfast_EG3_1.fastq transcriptome/reads/trimmomatic/EGfast_EG3_2.fastq transcriptome/reads/unpaired/EGfast_EG3_2.fastq ILLUMINACLIP:utils/adapters/TruSeq3-PE-2.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 2> log/EGfast_EG3.trimmomatic.log
+
+[Mon Nov  2 18:29:07 2020]
+rule trimmomatic:
+    input: transcriptome/reads/untrimmed/wt_GlyAc3_1.fastq, transcriptome/reads/untrimmed/wt_GlyAc3_2.fastq
+    output: transcriptome/reads/trimmomatic/wt_GlyAc3_1.fastq, transcriptome/reads/trimmomatic/wt_GlyAc3_2.fastq, transcriptome/reads/unpaired/wt_GlyAc3_1.fastq, transcriptome/reads/unpaired/wt_GlyAc3_2.fastq
+    log: log/wt_GlyAc3.trimmomatic.log
+    jobid: 27
+    benchmark: benchmarks/wt_GlyAc3.trimmomatic.benchmark.txt
+    wildcards: sra_id=wt_GlyAc3
+    threads: 8
+
+trimmomatic PE -threads 8 -phred33 transcriptome/reads/untrimmed/wt_GlyAc3_1.fastq transcriptome/reads/untrimmed/wt_GlyAc3_2.fastq transcriptome/reads/trimmomatic/wt_GlyAc3_1.fastq transcriptome/reads/unpaired/wt_GlyAc3_1.fastq transcriptome/reads/trimmomatic/wt_GlyAc3_2.fastq transcriptome/reads/unpaired/wt_GlyAc3_2.fastq ILLUMINACLIP:utils/adapters/TruSeq3-PE-2.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 2> log/wt_GlyAc3.trimmomatic.log
+Terminating processes on user request, this might take some time.
+[Mon Nov  2 18:29:17 2020]
+Error in rule trimmomatic:
+[Mon Nov  2 18:29:17 2020]
+    jobid: 18
+Error in rule trimmomatic:
+    output: transcriptome/reads/trimmomatic/EGfast_EG3_1.fastq, transcriptome/reads/trimmomatic/EGfast_EG3_2.fastq, transcriptome/reads/unpaired/EGfast_EG3_1.fastq, transcriptome/reads/unpaired/EGfast_EG3_2.fastq
+    jobid: 17
+    log: log/EGfast_EG3.trimmomatic.log (check log file(s) for error message)
+    output: transcriptome/reads/trimmomatic/EGfast_EG2_1.fastq, transcriptome/reads/trimmomatic/EGfast_EG2_2.fastq, transcriptome/reads/unpaired/EGfast_EG2_1.fastq, transcriptome/reads/unpaired/EGfast_EG2_2.fastq
+[Mon Nov  2 18:29:17 2020]
+    shell:
+        trimmomatic PE -threads 8 -phred33 transcriptome/reads/untrimmed/EGfast_EG3_1.fastq transcriptome/reads/untrimmed/EGfast_EG3_2.fastq transcriptome/reads/trimmomatic/EGfast_EG3_1.fastq transcriptome/reads/unpaired/EGfast_EG3_1.fastq transcriptome/reads/trimmomatic/EGfast_EG3_2.fastq transcriptome/reads/unpaired/EGfast_EG3_2.fastq ILLUMINACLIP:utils/adapters/TruSeq3-PE-2.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 2> log/EGfast_EG3.trimmomatic.log
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    log: log/EGfast_EG2.trimmomatic.log (check log file(s) for error message)
+Error in rule trimmomatic:
+
+    shell:
+        trimmomatic PE -threads 8 -phred33 transcriptome/reads/untrimmed/EGfast_EG2_1.fastq transcriptome/reads/untrimmed/EGfast_EG2_2.fastq transcriptome/reads/trimmomatic/EGfast_EG2_1.fastq transcriptome/reads/unpaired/EGfast_EG2_1.fastq transcriptome/reads/trimmomatic/EGfast_EG2_2.fastq transcriptome/reads/unpaired/EGfast_EG2_2.fastq ILLUMINACLIP:utils/adapters/TruSeq3-PE-2.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 2> log/EGfast_EG2.trimmomatic.log
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    jobid: 27
+
+Removing output files of failed job trimmomatic since they might be corrupted:
+transcriptome/reads/trimmomatic/EGfast_EG3_1.fastq, transcriptome/reads/trimmomatic/EGfast_EG3_2.fastq, transcriptome/reads/unpaired/EGfast_EG3_1.fastq, transcriptome/reads/unpaired/EGfast_EG3_2.fastq
+    output: transcriptome/reads/trimmomatic/wt_GlyAc3_1.fastq, transcriptome/reads/trimmomatic/wt_GlyAc3_2.fastq, transcriptome/reads/unpaired/wt_GlyAc3_1.fastq, transcriptome/reads/unpaired/wt_GlyAc3_2.fastq
+    log: log/wt_GlyAc3.trimmomatic.log (check log file(s) for error message)
+    shell:
+        trimmomatic PE -threads 8 -phred33 transcriptome/reads/untrimmed/wt_GlyAc3_1.fastq transcriptome/reads/untrimmed/wt_GlyAc3_2.fastq transcriptome/reads/trimmomatic/wt_GlyAc3_1.fastq transcriptome/reads/unpaired/wt_GlyAc3_1.fastq transcriptome/reads/trimmomatic/wt_GlyAc3_2.fastq transcriptome/reads/unpaired/wt_GlyAc3_2.fastq ILLUMINACLIP:utils/adapters/TruSeq3-PE-2.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 2> log/wt_GlyAc3.trimmomatic.log
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Removing output files of failed job trimmomatic since they might be corrupted:
+transcriptome/reads/trimmomatic/EGfast_EG2_1.fastq, transcriptome/reads/trimmomatic/EGfast_EG2_2.fastq, transcriptome/reads/unpaired/EGfast_EG2_1.fastq, transcriptome/reads/unpaired/EGfast_EG2_2.fastq
+Removing output files of failed job trimmomatic since they might be corrupted:
+transcriptome/reads/trimmomatic/wt_GlyAc3_1.fastq, transcriptome/reads/trimmomatic/wt_GlyAc3_2.fastq, transcriptome/reads/unpaired/wt_GlyAc3_1.fastq, transcriptome/reads/unpaired/wt_GlyAc3_2.fastq
+Complete log: /home/david/SBC/LE3/Praxis/.snakemake/log/2020-11-02T182906.585609.snakemake.log

@@ -1,0 +1,109 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	2	map_paired_end
+	6	trimmomatic
+	9
+
+[Wed Nov 11 17:53:04 2020]
+rule trimmomatic:
+    input: /home/david/SBC/GD1/rawData/AC2_1.fastq, /home/david/SBC/GD1/rawData/AC2_2.fastq
+    output: output/transcriptome/reads/trimmomatic/AC2_1.fastq, output/transcriptome/reads/trimmomatic/AC2_2.fastq, output/transcriptome/reads/unpaired/AC2_1.fastq, output/transcriptome/reads/unpaired/AC2_2.fastq
+    log: output/log/AC2.trimmomatic.log
+    jobid: 11
+    benchmark: output/benchmarks/AC2.trimmomatic.benchmark.txt
+    wildcards: sample=AC2
+    threads: 8
+
+[Wed Nov 11 17:54:04 2020]
+Finished job 11.
+1 of 9 steps (11%) done
+
+[Wed Nov 11 17:54:04 2020]
+rule trimmomatic:
+    input: /home/david/SBC/GD1/rawData/4H3_1.fastq, /home/david/SBC/GD1/rawData/4H3_2.fastq
+    output: output/transcriptome/reads/trimmomatic/4H3_1.fastq, output/transcriptome/reads/trimmomatic/4H3_2.fastq, output/transcriptome/reads/unpaired/4H3_1.fastq, output/transcriptome/reads/unpaired/4H3_2.fastq
+    log: output/log/4H3.trimmomatic.log
+    jobid: 9
+    benchmark: output/benchmarks/4H3.trimmomatic.benchmark.txt
+    wildcards: sample=4H3
+    threads: 8
+
+[Wed Nov 11 17:55:08 2020]
+Finished job 9.
+2 of 9 steps (22%) done
+
+[Wed Nov 11 17:55:09 2020]
+rule trimmomatic:
+    input: /home/david/SBC/GD1/rawData/4H1_1.fastq, /home/david/SBC/GD1/rawData/4H1_2.fastq
+    output: output/transcriptome/reads/trimmomatic/4H1_1.fastq, output/transcriptome/reads/trimmomatic/4H1_2.fastq, output/transcriptome/reads/unpaired/4H1_1.fastq, output/transcriptome/reads/unpaired/4H1_2.fastq
+    log: output/log/4H1.trimmomatic.log
+    jobid: 7
+    benchmark: output/benchmarks/4H1.trimmomatic.benchmark.txt
+    wildcards: sample=4H1
+    threads: 8
+
+[Wed Nov 11 17:56:32 2020]
+Finished job 7.
+3 of 9 steps (33%) done
+
+[Wed Nov 11 17:56:32 2020]
+rule trimmomatic:
+    input: /home/david/SBC/GD1/rawData/AC3_1.fastq, /home/david/SBC/GD1/rawData/AC3_2.fastq
+    output: output/transcriptome/reads/trimmomatic/AC3_1.fastq, output/transcriptome/reads/trimmomatic/AC3_2.fastq, output/transcriptome/reads/unpaired/AC3_1.fastq, output/transcriptome/reads/unpaired/AC3_2.fastq
+    log: output/log/AC3.trimmomatic.log
+    jobid: 12
+    benchmark: output/benchmarks/AC3.trimmomatic.benchmark.txt
+    wildcards: sample=AC3
+    threads: 8
+
+[Wed Nov 11 17:57:37 2020]
+Finished job 12.
+4 of 9 steps (44%) done
+
+[Wed Nov 11 17:57:37 2020]
+rule trimmomatic:
+    input: /home/david/SBC/GD1/rawData/4H2_1.fastq, /home/david/SBC/GD1/rawData/4H2_2.fastq
+    output: output/transcriptome/reads/trimmomatic/4H2_1.fastq, output/transcriptome/reads/trimmomatic/4H2_2.fastq, output/transcriptome/reads/unpaired/4H2_1.fastq, output/transcriptome/reads/unpaired/4H2_2.fastq
+    log: output/log/4H2.trimmomatic.log
+    jobid: 8
+    benchmark: output/benchmarks/4H2.trimmomatic.benchmark.txt
+    wildcards: sample=4H2
+    threads: 8
+
+[Wed Nov 11 17:58:55 2020]
+Finished job 8.
+5 of 9 steps (56%) done
+
+[Wed Nov 11 17:58:55 2020]
+rule trimmomatic:
+    input: /home/david/SBC/GD1/rawData/AC1_1.fastq, /home/david/SBC/GD1/rawData/AC1_2.fastq
+    output: output/transcriptome/reads/trimmomatic/AC1_1.fastq, output/transcriptome/reads/trimmomatic/AC1_2.fastq, output/transcriptome/reads/unpaired/AC1_1.fastq, output/transcriptome/reads/unpaired/AC1_2.fastq
+    log: output/log/AC1.trimmomatic.log
+    jobid: 10
+    benchmark: output/benchmarks/AC1.trimmomatic.benchmark.txt
+    wildcards: sample=AC1
+    threads: 8
+
+[Wed Nov 11 17:59:58 2020]
+Finished job 10.
+6 of 9 steps (67%) done
+
+[Wed Nov 11 17:59:58 2020]
+rule map_paired_end:
+    input: /home/david/SBC/GD1/rawData/AC3_1.fastq, /home/david/SBC/GD1/rawData/AC3_2.fastq
+    output: cat_folder/AC3.fq
+    jobid: 6
+    wildcards: sample=AC3
+
+RuleException in line 15 of /home/david/SBC/LE3/Praxis/Praxis/Snakefile:
+'OutputFiles' object has no attribute 'paired1'
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.7/site-packages/snakemake/executors/__init__.py", line 135, in run_jobs
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.7/site-packages/snakemake/executors/__init__.py", line 433, in run
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.7/site-packages/snakemake/executors/__init__.py", line 225, in _run
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.7/site-packages/snakemake/executors/__init__.py", line 151, in _run
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.7/site-packages/snakemake/executors/__init__.py", line 157, in printjob

@@ -1,0 +1,60 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 16
+Rules claiming more threads will be scaled down.
+Conda environments: ignored
+Job counts:
+	count	jobs
+	1	all
+	1	deseq2
+	12	get_SRA_by_accession
+	12	salmon_quant
+	1	salmon_quant_table
+	12	trimmomatic
+	39
+
+[Mon Nov  2 18:29:56 2020]
+rule get_SRA_by_accession:
+    output: transcriptome/reads/untrimmed/wt_Ac2_1.fastq, transcriptome/reads/untrimmed/wt_Ac2_2.fastq
+    jobid: 32
+    benchmark: benchmarks/wt_Ac2.download.benchmark.txt
+    wildcards: sra_id=wt_Ac2
+    threads: 8
+
+
+        fasterq-dump wt_Ac2 -O transcriptome/reads/untrimmed --split-files
+        # This clears a cache where SRA Tools reserves a lot of space
+        cache-mgr --clear >/dev/null 2>&1
+        
+
+[Mon Nov  2 18:29:56 2020]
+rule get_SRA_by_accession:
+    output: transcriptome/reads/untrimmed/wt_Ac3_1.fastq, transcriptome/reads/untrimmed/wt_Ac3_2.fastq
+    jobid: 33
+    benchmark: benchmarks/wt_Ac3.download.benchmark.txt
+    wildcards: sra_id=wt_Ac3
+    threads: 8
+
+
+        fasterq-dump wt_Ac3 -O transcriptome/reads/untrimmed --split-files
+        # This clears a cache where SRA Tools reserves a lot of space
+        cache-mgr --clear >/dev/null 2>&1
+        
+Waiting at most 5 seconds for missing files.
+Terminating processes on user request, this might take some time.
+MissingOutputException in line 52 of /home/david/SBC/LE3/Praxis/rules/download.smk:
+Job completed successfully, but some output files are missing. Missing files after 5 seconds:
+transcriptome/reads/untrimmed/wt_Ac3_1.fastq
+transcriptome/reads/untrimmed/wt_Ac3_2.fastq
+This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait.
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.6/site-packages/snakemake/executors/__init__.py", line 566, in handle_job_success
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.6/site-packages/snakemake/executors/__init__.py", line 249, in handle_job_success
+Waiting at most 5 seconds for missing files.
+MissingOutputException in line 52 of /home/david/SBC/LE3/Praxis/rules/download.smk:
+Job completed successfully, but some output files are missing. Missing files after 5 seconds:
+transcriptome/reads/untrimmed/wt_Ac2_1.fastq
+transcriptome/reads/untrimmed/wt_Ac2_2.fastq
+This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait.
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.6/site-packages/snakemake/executors/__init__.py", line 566, in handle_job_success
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.6/site-packages/snakemake/executors/__init__.py", line 249, in handle_job_success
+Complete log: /home/david/SBC/LE3/Praxis/.snakemake/log/2020-11-02T182955.852883.snakemake.log

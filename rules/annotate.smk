@@ -25,7 +25,7 @@ rule prodigal:
     Obtain the predicted genes/proteins from the assembled transcriptome.
     """
     input:
-        assembly = expand("reference/assembled/{assembler}_out", assembler = ASSEMBLER)
+        assembly = expand(output_directory + "reference/assembled/{assembler}_out", assembler = ASSEMBLER)
     params:
         reference = lambda wildcards, input: input.assembly[0] + "/" + ref
     output:

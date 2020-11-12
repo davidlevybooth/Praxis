@@ -1,0 +1,227 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 16
+Rules claiming more threads will be scaled down.
+Conda environments: ignored
+Job counts:
+	count	jobs
+	1	all
+	1	deseq2
+	1	salmon_index
+	12	salmon_quant
+	1	salmon_quant_table
+	16
+
+[Mon Nov  2 18:16:47 2020]
+rule salmon_index:
+    input: transcriptome/reference/RHA1_locus.fna
+    output: reference/salmon_quasi
+    jobid: 16
+    threads: 8
+
+[Mon Nov  2 18:16:55 2020]
+Finished job 16.
+1 of 16 steps (6%) done
+
+[Mon Nov  2 18:16:55 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/wt_EG2_1.fastq, transcriptome/reads/trimmomatic/wt_EG2_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/wt_EG2_trimmomatic
+    log: log/salmon/trimmomatic/wt_EG2.log
+    jobid: 10
+    benchmark: benchmarks/salmon.quant/trimmomatic/wt_EG2.benchmark.txt
+    wildcards: sra_id=wt_EG2, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:16:55 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/wt_GlyAc1_1.fastq, transcriptome/reads/trimmomatic/wt_GlyAc1_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/wt_GlyAc1_trimmomatic
+    log: log/salmon/trimmomatic/wt_GlyAc1.log
+    jobid: 12
+    benchmark: benchmarks/salmon.quant/trimmomatic/wt_GlyAc1.benchmark.txt
+    wildcards: sra_id=wt_GlyAc1, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:17:23 2020]
+Finished job 12.
+2 of 16 steps (12%) done
+
+[Mon Nov  2 18:17:23 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/wt_Ac3_1.fastq, transcriptome/reads/trimmomatic/wt_Ac3_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/wt_Ac3_trimmomatic
+    log: log/salmon/trimmomatic/wt_Ac3.log
+    jobid: 8
+    benchmark: benchmarks/salmon.quant/trimmomatic/wt_Ac3.benchmark.txt
+    wildcards: sra_id=wt_Ac3, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:17:24 2020]
+Finished job 10.
+3 of 16 steps (19%) done
+
+[Mon Nov  2 18:17:24 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/wt_Ac1_1.fastq, transcriptome/reads/trimmomatic/wt_Ac1_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/wt_Ac1_trimmomatic
+    log: log/salmon/trimmomatic/wt_Ac1.log
+    jobid: 6
+    benchmark: benchmarks/salmon.quant/trimmomatic/wt_Ac1.benchmark.txt
+    wildcards: sra_id=wt_Ac1, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:17:48 2020]
+Finished job 6.
+4 of 16 steps (25%) done
+
+[Mon Nov  2 18:17:48 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/EGfast_EG2_1.fastq, transcriptome/reads/trimmomatic/EGfast_EG2_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/EGfast_EG2_trimmomatic
+    log: log/salmon/trimmomatic/EGfast_EG2.log
+    jobid: 4
+    benchmark: benchmarks/salmon.quant/trimmomatic/EGfast_EG2.benchmark.txt
+    wildcards: sra_id=EGfast_EG2, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:17:56 2020]
+Finished job 8.
+5 of 16 steps (31%) done
+
+[Mon Nov  2 18:17:56 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/wt_GlyAc2_1.fastq, transcriptome/reads/trimmomatic/wt_GlyAc2_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/wt_GlyAc2_trimmomatic
+    log: log/salmon/trimmomatic/wt_GlyAc2.log
+    jobid: 13
+    benchmark: benchmarks/salmon.quant/trimmomatic/wt_GlyAc2.benchmark.txt
+    wildcards: sra_id=wt_GlyAc2, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:18:18 2020]
+Finished job 4.
+6 of 16 steps (38%) done
+
+[Mon Nov  2 18:18:18 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/wt_EG3_1.fastq, transcriptome/reads/trimmomatic/wt_EG3_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/wt_EG3_trimmomatic
+    log: log/salmon/trimmomatic/wt_EG3.log
+    jobid: 11
+    benchmark: benchmarks/salmon.quant/trimmomatic/wt_EG3.benchmark.txt
+    wildcards: sra_id=wt_EG3, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:18:27 2020]
+Finished job 13.
+7 of 16 steps (44%) done
+
+[Mon Nov  2 18:18:27 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/wt_EG1_1.fastq, transcriptome/reads/trimmomatic/wt_EG1_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/wt_EG1_trimmomatic
+    log: log/salmon/trimmomatic/wt_EG1.log
+    jobid: 9
+    benchmark: benchmarks/salmon.quant/trimmomatic/wt_EG1.benchmark.txt
+    wildcards: sra_id=wt_EG1, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:18:47 2020]
+Finished job 11.
+8 of 16 steps (50%) done
+
+[Mon Nov  2 18:18:47 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/wt_Ac2_1.fastq, transcriptome/reads/trimmomatic/wt_Ac2_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/wt_Ac2_trimmomatic
+    log: log/salmon/trimmomatic/wt_Ac2.log
+    jobid: 7
+    benchmark: benchmarks/salmon.quant/trimmomatic/wt_Ac2.benchmark.txt
+    wildcards: sra_id=wt_Ac2, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:18:58 2020]
+Finished job 9.
+9 of 16 steps (56%) done
+
+[Mon Nov  2 18:18:58 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/EGfast_EG3_1.fastq, transcriptome/reads/trimmomatic/EGfast_EG3_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/EGfast_EG3_trimmomatic
+    log: log/salmon/trimmomatic/EGfast_EG3.log
+    jobid: 5
+    benchmark: benchmarks/salmon.quant/trimmomatic/EGfast_EG3.benchmark.txt
+    wildcards: sra_id=EGfast_EG3, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:19:22 2020]
+Finished job 7.
+10 of 16 steps (62%) done
+
+[Mon Nov  2 18:19:22 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/wt_GlyAc3_1.fastq, transcriptome/reads/trimmomatic/wt_GlyAc3_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/wt_GlyAc3_trimmomatic
+    log: log/salmon/trimmomatic/wt_GlyAc3.log
+    jobid: 14
+    benchmark: benchmarks/salmon.quant/trimmomatic/wt_GlyAc3.benchmark.txt
+    wildcards: sra_id=wt_GlyAc3, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:19:38 2020]
+Finished job 5.
+11 of 16 steps (69%) done
+
+[Mon Nov  2 18:19:38 2020]
+rule salmon_quant:
+    input: transcriptome/reads/trimmomatic/EGfast_EG1_1.fastq, transcriptome/reads/trimmomatic/EGfast_EG1_2.fastq, reference/salmon_quasi
+    output: transcriptome/salmon/EGfast_EG1_trimmomatic
+    log: log/salmon/trimmomatic/EGfast_EG1.log
+    jobid: 3
+    benchmark: benchmarks/salmon.quant/trimmomatic/EGfast_EG1.benchmark.txt
+    wildcards: sra_id=EGfast_EG1, trimmer=trimmomatic
+    threads: 8
+
+[Mon Nov  2 18:19:52 2020]
+Finished job 14.
+12 of 16 steps (75%) done
+[Mon Nov  2 18:20:05 2020]
+Finished job 3.
+13 of 16 steps (81%) done
+
+[Mon Nov  2 18:20:06 2020]
+rule salmon_quant_table:
+    input: transcriptome/salmon/EGfast_EG1_trimmomatic, transcriptome/salmon/EGfast_EG2_trimmomatic, transcriptome/salmon/EGfast_EG3_trimmomatic, transcriptome/salmon/wt_Ac1_trimmomatic, transcriptome/salmon/wt_Ac2_trimmomatic, transcriptome/salmon/wt_Ac3_trimmomatic, transcriptome/salmon/wt_EG1_trimmomatic, transcriptome/salmon/wt_EG2_trimmomatic, transcriptome/salmon/wt_EG3_trimmomatic, transcriptome/salmon/wt_GlyAc1_trimmomatic, transcriptome/salmon/wt_GlyAc2_trimmomatic, transcriptome/salmon/wt_GlyAc3_trimmomatic
+    output: results/tables/salmon/trimmomatic/counts.tsv
+    jobid: 1
+    wildcards: trimmer=trimmomatic
+
+[Mon Nov  2 18:20:07 2020]
+Finished job 1.
+14 of 16 steps (88%) done
+
+[Mon Nov  2 18:20:07 2020]
+rule deseq2:
+    input: results/tables/salmon/trimmomatic/counts.tsv
+    output: results/tables/salmon/trimmomatic/Egfast_EG_wt_Ac.tsv, results/tables/salmon/trimmomatic/Egfast_EG_wt_EG.tsv, results/tables/salmon/trimmomatic/Egfast_EG_wt_GlyAc.tsv, results/tables/salmon/trimmomatic/wt_Ac_wt_EG.tsv, results/tables/salmon/trimmomatic/wt_Ac_wt_GlyAc.tsv, results/tables/salmon/trimmomatic/wt_EG_wt_GlyAc.tsv
+    jobid: 2
+
+Rscript --vanilla /home/david/SBC/LE3/Praxis/.snakemake/scripts/tmp0fou4u25.deseq.R
+[Mon Nov  2 18:20:44 2020]
+Error in rule deseq2:
+    jobid: 2
+    output: results/tables/salmon/trimmomatic/Egfast_EG_wt_Ac.tsv, results/tables/salmon/trimmomatic/Egfast_EG_wt_EG.tsv, results/tables/salmon/trimmomatic/Egfast_EG_wt_GlyAc.tsv, results/tables/salmon/trimmomatic/wt_Ac_wt_EG.tsv, results/tables/salmon/trimmomatic/wt_Ac_wt_GlyAc.tsv, results/tables/salmon/trimmomatic/wt_EG_wt_GlyAc.tsv
+
+RuleException:
+CalledProcessError in line 34 of /home/david/SBC/LE3/Praxis/rules/deseq2.smk:
+Command 'set -euo pipefail;  Rscript --vanilla /home/david/SBC/LE3/Praxis/.snakemake/scripts/tmp0fou4u25.deseq.R' returned non-zero exit status 1.
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.6/site-packages/snakemake/executors/__init__.py", line 2229, in run_wrapper
+  File "/home/david/SBC/LE3/Praxis/rules/deseq2.smk", line 34, in __rule_deseq2
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.6/site-packages/snakemake/executors/__init__.py", line 551, in _callback
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.6/concurrent/futures/thread.py", line 56, in run
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.6/site-packages/snakemake/executors/__init__.py", line 537, in cached_or_run
+  File "/home/david/miniconda3/envs/Praxis/lib/python3.6/site-packages/snakemake/executors/__init__.py", line 2241, in run_wrapper
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/david/SBC/LE3/Praxis/.snakemake/log/2020-11-02T181646.522867.snakemake.log

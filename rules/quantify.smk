@@ -11,10 +11,18 @@ if genome_file:
     ref_dir = "/".join(genome_file.split("/")[:-2])
 
 # Select genome/transcriptome ref_gff directories
+
+#Determine if annotation required
 if genome_file:
     feature_type = "gene"
-    ref_gff = ref_dir + "/genes_annotated.gff"
-    ref_fna = ref_dir + "/genes_annotated.fna"
+    if config["genome"]["annotate"]:
+        ref_gff = ref_dir + "/genes_annotated.gff"
+        ref_fna = ref_dir + "/genes_annotated.fna"
+    else: 
+        ref_fna = genome_file
+        ref_gff = genome_file.replace(".fna", ".gff")
+
+#If annotation, set file paths
 else:
     if genome_url:
         feature_type = "gene"
@@ -36,15 +44,14 @@ rule htseq_count_table:
     Generate a count table using htseq-count.
     """
     input:
-        bams = expand("intermediate/{trimmer}/{aligner}/{sra_id}.sorted.bam",
-        sra_id = config["sample_ids"], trimmer = config["TRIMMER"], aligner = config["ALIGNER"]),
+        bams = expand(output_directory + "intermediate/{trimmer}/{aligner}/{sra_id}.sorted.bam", trimmer = config["TRIMMER"], aligner = config["ALIGNER"], sra_id = sampleID_list),
         gff = ref_gff
     output:
-        "results/tables/htseq/{trimmer}/{aligner}/counts.tsv"
+        output_directory + "results/tables/htseq/{trimmer}/{aligner}/counts.tsv"
     shadow: "minimal"
     threads: THREADS
     benchmark:
-        "benchmarks/htseq/{trimmer}/{aligner}/benchmark.txt"
+        output_directory + "benchmarks/htseq/{trimmer}/{aligner}/benchmark.txt"
     shell:
         """
         # Save the count table as a temporary file and then prepend a header line
@@ -58,17 +65,17 @@ rule feature_counts_table:
     Generate a count table with featureCounts
     """
     input:
-        bams = expand("intermediate/{trimmer}/{aligner}/{sra_id}.sorted.bam", trimmer=TRIMMER, aligner=ALIGNER, sra_id = config["sample_ids"]),
+        bams = expand(output_directory + "intermediate/{trimmer}/{aligner}/{sra_id}.sorted.bam", trimmer=TRIMMER, aligner=ALIGNER, sra_id = sampleID_list),
         gff = ref_gff
     output:
-        "results/tables/featureCounts/{trimmer}/{aligner}/counts.tsv"
+        output_directory + "results/tables/featureCounts/{trimmer}/{aligner}/counts.tsv"
     params:
         type = feature_type
     threads: THREADS
     log:
-        "log/featureCounts/{trimmer}/{aligner}/log"
+       output_directory + "log/featureCounts/{trimmer}/{aligner}/log"
     benchmark:
-        "benchmarks/featureCounts/{trimmer}/{aligner}/benchmark.txt"
+        output_directory + "benchmarks/featureCounts/{trimmer}/{aligner}/benchmark.txt"
     shell:
         """
         featureCounts -O -p -T {threads} -t {params.type} -F GTF -a {input.gff} -o {output} {input.bams}
@@ -81,7 +88,7 @@ rule salmon_index:
     input:
         fasta = ref_fna
     output:
-        directory("reference/salmon_quasi"),
+        directory(output_directory + "reference/salmon_quasi"),
     threads: THREADS
     run:
         shell("salmon index -t {input.fasta} -i {output} --type quasi -k 31")
@@ -92,11 +99,11 @@ rule salmon_quant:
     Generate directories containing count files with salmon (quasi mode).
     """
     input:
-        fastq_1="transcriptome/reads/{trimmer}/{sra_id}_1.fastq",
-        fastq_2="transcriptome/reads/{trimmer}/{sra_id}_2.fastq",
-        salmon_dir = directory("reference/salmon_quasi")
+        fastq_1= output_directory + "transcriptome/reads/{trimmer}/{sra_id}_1.fastq",
+        fastq_2=output_directory + "transcriptome/reads/{trimmer}/{sra_id}_2.fastq",
+        salmon_dir = output_directory + "reference/salmon_quasi"
     output:
-        directory("transcriptome/salmon/{sra_id}_{trimmer}")
+        directory(output_directory + "transcriptome/salmon/{sra_id}_{trimmer}")
     threads: THREADS
     log:
         "log/salmon/{trimmer}/{sra_id}.log"
@@ -112,8 +119,8 @@ rule salmon_quant_table:
     Generate a count table with salmon.
     """
     input:
-        expand(directory("transcriptome/salmon/{sra_id}_{trimmer}"), sra_id = config["sample_ids"], trimmer = TRIMMER)
+        expand(output_directory + "transcriptome/salmon/{sra_id}_{trimmer}", trimmer = TRIMMER, sra_id = sampleID_list)
     output:
-        "results/tables/salmon/{trimmer}/counts.tsv"
+        output_directory + "results/tables/salmon/{trimmer}/counts.tsv"
     run:
         shell("salmon quantmerge --quants {input} --column numreads -o {output}")

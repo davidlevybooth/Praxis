@@ -1,0 +1,4 @@
+Exception in line 15 of /home/david/SBC/LE3/Praxis/rules/quality_control.smk:
+'EGfast-EG1_1.fastq' is not present in '/home/david/SBC/GD1/rawData/'.
+  File "/home/david/SBC/LE3/Praxis/Snakefile", line 80, in <module>
+  File "/home/david/SBC/LE3/Praxis/rules/quality_control.smk", line 15, in <module>

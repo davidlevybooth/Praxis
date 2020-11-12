@@ -10,14 +10,14 @@ rule megahit_assemble:
     Assemble a reference transcriptome with megahit.
     """
     input:
-        left = expand("transcriptome/reads/{trimmer}/{sra_id}_1.fastq", sra_id=config["sample_ids"], trimmer=TRIMMER),
-        right = expand("transcriptome/reads/{trimmer}/{sra_id}_2.fastq", sra_id=config["sample_ids"], trimmer=TRIMMER)
+        left = expand(output_directory + "transcriptome/reads/{trimmer}/{sra_id}_1.fastq", sra_id=sampleID_list, trimmer=TRIMMER),
+        right = expand(output_directory + "transcriptome/reads/{trimmer}/{sra_id}_2.fastq", sra_id=sampleID_list, trimmer=TRIMMER)
     params:
         left = lambda wildcards, input: ",".join(input.left),
         right = lambda wildcards, input: ",".join(input.right),
         memory = config["MAX_MEMORY"]
     output:
-        directory("reference/assembled/megahit_out")
+        directory(output_directory + "reference/assembled/megahit_out")
     threads:
         THREADS
     run:
@@ -28,9 +28,9 @@ rule trinity_reformat_headers:
     Remove fasta file header so it can be accepted by trinity.
     """
     input:
-        "transcriptome/reads/{sra_id}_{n}.{trimmer}.fastq"
+        output_directory + "transcriptome/reads/{sra_id}_{n}.{trimmer}.fastq"
     output:
-        "transcriptome/reads/{sra_id}_{n}.{trimmer}.newheaders.fastq"
+        output_directory + "transcriptome/reads/{sra_id}_{n}.{trimmer}.newheaders.fastq"
     run:
         shell("perl -ne 's/SR\S+ (\S+) .+/$1\/{wildcards.n}/; print' {input} > {output}")
 
@@ -39,8 +39,8 @@ rule trinity_assemble:
     Assemble a reference transcriptome with trinity.
     """
     input:
-        left = expand("transcriptome/reads/{trimmer}/{sra_id}_1.newheaders.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"]),
-        right = expand("transcriptome/reads/{trimmer}/{sra_id}_2.newheaders.fastq", sra_id=config["sample_ids"], trimmer=config["TRIMMER"])
+        left = expand(output_directory + "transcriptome/reads/{trimmer}/{sra_id}_1.newheaders.fastq", sra_id=sampleID_list, trimmer=config["TRIMMER"]),
+        right = expand(output_directory + "transcriptome/reads/{trimmer}/{sra_id}_2.newheaders.fastq", sra_id=sampleID_list, trimmer=config["TRIMMER"])
     params:
         left = lambda wildcards, input: ",".join(input.left),
         right = lambda wildcards, input: ",".join(input.right),
@@ -48,6 +48,6 @@ rule trinity_assemble:
     threads:
         THREADS
     output:
-        directory("reference/assembled/trinity_out")
+        directory(output_directory + "reference/assembled/trinity_out")
     run:
         shell("Trinity --left {params.left} --right {params.right} -o {output} --max_memory {params.memory} --CPU {threads}")

@@ -15,7 +15,8 @@ MAX_MEMORY: 30000000000        # bytes
 # Dictionary with genomes that can be aligned against.
 genome:
   ncbi_url: # ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/004/765/GCF_003004765.2_ASM300476v2
-  ref_file:
+  ref_file: transcriptome/reference/RHA1_locus.fna
+  annotate: False
 
 # Trimmer Adapter File
 ###############################################################################
@@ -30,8 +31,8 @@ diamondDB:
 # RNASeq Data
 ###############################################################################
 
-samples: samples.tsv
+#sample directory MUST have trailing slashes /*/
+sample_directory: transcriptome/reads/untrimmed/
+output_directory: results/
 
-sample_ids: [SRR6877528, SRR6877529, SRR6877530,
-             SRR6877531, SRR6877532, SRR6877533,
-             SRR6877534, SRR6877535, SRR6877536]
+samples: samples.tsv

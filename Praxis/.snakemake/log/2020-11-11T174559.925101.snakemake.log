@@ -1,0 +1,75 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	6	map_paired_end
+	7
+
+[Wed Nov 11 17:46:00 2020]
+rule map_paired_end:
+    input: /home/david/SBC/GD1/rawData/AC2_1.fastq, /home/david/SBC/GD1/rawData/AC2_2.fastq
+    output: cat_folder/AC2.fq
+    jobid: 5
+    wildcards: sample=AC2
+
+[Wed Nov 11 17:46:08 2020]
+Finished job 5.
+1 of 7 steps (14%) done
+
+[Wed Nov 11 17:46:08 2020]
+rule map_paired_end:
+    input: /home/david/SBC/GD1/rawData/4H3_1.fastq, /home/david/SBC/GD1/rawData/4H3_2.fastq
+    output: cat_folder/4H3.fq
+    jobid: 3
+    wildcards: sample=4H3
+
+[Wed Nov 11 17:46:18 2020]
+Finished job 3.
+2 of 7 steps (29%) done
+
+[Wed Nov 11 17:46:18 2020]
+rule map_paired_end:
+    input: /home/david/SBC/GD1/rawData/AC1_1.fastq, /home/david/SBC/GD1/rawData/AC1_2.fastq
+    output: cat_folder/AC1.fq
+    jobid: 4
+    wildcards: sample=AC1
+
+[Wed Nov 11 17:46:27 2020]
+Finished job 4.
+3 of 7 steps (43%) done
+
+[Wed Nov 11 17:46:27 2020]
+rule map_paired_end:
+    input: /home/david/SBC/GD1/rawData/4H2_1.fastq, /home/david/SBC/GD1/rawData/4H2_2.fastq
+    output: cat_folder/4H2.fq
+    jobid: 2
+    wildcards: sample=4H2
+
+[Wed Nov 11 17:46:37 2020]
+Finished job 2.
+4 of 7 steps (57%) done
+
+[Wed Nov 11 17:46:37 2020]
+rule map_paired_end:
+    input: /home/david/SBC/GD1/rawData/AC3_1.fastq, /home/david/SBC/GD1/rawData/AC3_2.fastq
+    output: cat_folder/AC3.fq
+    jobid: 6
+    wildcards: sample=AC3
+
+Terminating processes on user request, this might take some time.
+[Wed Nov 11 17:46:40 2020]
+Error in rule map_paired_end:
+    jobid: 6
+    output: cat_folder/AC3.fq
+    shell:
+        
+        cat /home/david/SBC/GD1/rawData/AC3_1.fastq /home/david/SBC/GD1/rawData/AC3_2.fastq > cat_folder/AC3.fq
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Removing output files of failed job map_paired_end since they might be corrupted:
+cat_folder/AC3.fq
+Complete log: /home/david/SBC/LE3/Praxis/Praxis/.snakemake/log/2020-11-11T174559.925101.snakemake.log

@@ -1,0 +1,3 @@
+SyntaxError in line 68 of /home/david/SBC/LE3/Praxis/rules/quantify.smk:
+EOF in multi-line statement (quantify.smk, line 68)
+  File "/home/david/SBC/LE3/Praxis/Snakefile", line 69, in <module>

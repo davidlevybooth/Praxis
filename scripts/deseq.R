@@ -8,23 +8,24 @@
 write("Loading DESeq2", stdout())
 suppressMessages(library("DESeq2"))
 
+
 parallel <- FALSE
-if (snakemake@threads > 1) {
-    library("BiocParallel")
-    # setup parallelization
-    register(MulticoreParam(snakemake@threads))
-    parallel <- TRUE
-}
+# if (snakemake@threads > 1) {
+#     library("BiocParallel")
+#     # setup parallelization
+#     register(MulticoreParam(snakemake@threads))
+#     parallel <- TRUE
+# }
 
 #Init script
-##########################################################################################################
+#########################################################################################################
 
 # log <- file(snakemake@log[[1]], open="wt")
 # sink(log)
 # sink(log, type="message")
 
-##debug file type # looks okay
-##write.table(snakemake@input[["counts"]], "input.table.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
+#debug file type # looks okay
+#write.table(snakemake@input[["counts"]], "input.table.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
 
 #Load data
 ##########################################################################################################
@@ -57,18 +58,20 @@ for(count_table in snakemake@input[["counts"]]) {
   for(i in 1:nrow(cont_out)) {
     c1 <- as.character(cont_out$X1[i])
     c2 <- as.character(cont_out$X2[i])
-    write(" ", stdout())
-    write(paste("DeSeq2: Comparing ", c1, " and ", c2, sep = ""), stdout())
+    #write(" ", stdout())
+    write(paste("DeSeq2: Comparing ", c1, " (+) and ", c2, " (-)", sep = ""), stdout())
 
     contrast <- c("Condition", c1, c2)
     res <- results(dds, contrast=contrast, parallel=parallel)
-    res <- lfcShrink(dds, contrast=contrast, res=res)
+    res <- suppressMessages(lfcShrink(dds, contrast=contrast, res=res))
     res <- res[order(res$log2FoldChange),]
+
+    write(paste("DeSeq2: writing output:",snakemake@output[["tables"]][i]), stdout())
 
     #build filename
     table_file <- basename(snakemake@input[["counts"]])
     table_file <-  gsub("counts", paste(c1, c2, sep = "_"), table_file)
-    write.table(as.data.frame(res), file=paste("results/tables/", table_file, sep = ""))
+    #write.table(as.data.frame(res), file=paste(snakemake@params[["output_directory"]], "/tables/", table_file, sep = ""))
     write.table(as.data.frame(res), file=snakemake@output[["tables"]][i])
   }
 }

@@ -1,0 +1,29 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	annotate_fna
+	1	deseq2
+	1	diamond_blastp
+	1	diamond_index
+	1	download_uniref
+	1	megahit_assemble
+	1	prodigal
+	1	salmon_index
+	12	salmon_quant
+	1	salmon_quant_table
+	22
+
+[Mon Nov  9 23:11:32 2020]
+rule megahit_assemble:
+    input: transcriptome/reads/trimmomatic/EGfast-EG1_1.fastq, transcriptome/reads/trimmomatic/EGfast-EG2_1.fastq, transcriptome/reads/trimmomatic/EGfast-EG3_1.fastq, transcriptome/reads/trimmomatic/wt-Ac1_1.fastq, transcriptome/reads/trimmomatic/wt-Ac2_1.fastq, transcriptome/reads/trimmomatic/wt-Ac3_1.fastq, transcriptome/reads/trimmomatic/wt-EG1_1.fastq, transcriptome/reads/trimmomatic/wt-EG2_1.fastq, transcriptome/reads/trimmomatic/wt-EG3_1.fastq, transcriptome/reads/trimmomatic/wt-GlyAc1_1.fastq, transcriptome/reads/trimmomatic/wt-GlyAc2_1.fastq, transcriptome/reads/trimmomatic/wt-GlyAc3_1.fastq, transcriptome/reads/trimmomatic/EGfast-EG1_2.fastq, transcriptome/reads/trimmomatic/EGfast-EG2_2.fastq, transcriptome/reads/trimmomatic/EGfast-EG3_2.fastq, transcriptome/reads/trimmomatic/wt-Ac1_2.fastq, transcriptome/reads/trimmomatic/wt-Ac2_2.fastq, transcriptome/reads/trimmomatic/wt-Ac3_2.fastq, transcriptome/reads/trimmomatic/wt-EG1_2.fastq, transcriptome/reads/trimmomatic/wt-EG2_2.fastq, transcriptome/reads/trimmomatic/wt-EG3_2.fastq, transcriptome/reads/trimmomatic/wt-GlyAc1_2.fastq, transcriptome/reads/trimmomatic/wt-GlyAc2_2.fastq, transcriptome/reads/trimmomatic/wt-GlyAc3_2.fastq
+    output: reference/assembled/megahit_out
+    jobid: 19
+    threads: 2
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/david/SBC/LE3/Praxis/.snakemake/log/2020-11-09T231132.227061.snakemake.log
