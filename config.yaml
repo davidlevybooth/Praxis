@@ -30,6 +30,7 @@ diamondDB:
 
 # RNASeq Data
 ###############################################################################
+project_name: GD02 Acetovanillone RNASeq
 
 #sample directory MUST have trailing slashes /*/
 sample_directory: transcriptome/reads/untrimmed/

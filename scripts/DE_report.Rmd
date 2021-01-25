@@ -1,0 +1,170 @@
+---
+title: "Differential Expression Report"
+author: "Praxis"
+date: "`r format(Sys.time(), '%Y-%M-%D')`"
+#output: html_document
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+#Libraries
+####################################################################
+library(pander)
+library(ggplot2)
+library(stringr)
+library(EnhancedVolcano)
+library(reshape2)
+library(vegan)
+```
+
+```{r echo=FALSE}
+
+# Functions
+####################################################################
+
+#create PCOA plot 
+plot_pcoa <-function(pcoa, conditions, title) {
+  
+  eig<- eigenvals(pcoa)
+  prop<-eig/sum(eig)
+  PCOA1 <- paste("PCoA1 ",100*round(prop[1],3),"%")
+  PCOA2 <- paste("PCoA2 ",100*round(prop[2],3),"%")
+  
+  pcoa.sum <- summary(pcoa)
+  pcoa.sum.sites  <- data.frame(pcoa.sum$sites[,1:2])       # PC1 and PC2
+  pcoa.sum.species  <- data.frame(pcoa.sum$species[,1:2])     # loadings for PC1 and PC2
+  
+  if(!is.null(conditions)) {
+    pcoa.sum.sites["colorby"] <- conditions
+  }
+  else { pcoa.sum.sites["colorby"] = rep("1", nrow(pcoa.sum.sites)) }
+  
+  pcoa_plot <- ggplot(pcoa.sum.sites, aes(x=MDS1, y=MDS2)) + 
+    geom_point(aes(color = colorby), size=4) +
+    geom_hline(yintercept=0, linetype="dotted") +
+    geom_vline(xintercept=0, linetype="dotted") +
+    theme_bw() +
+    theme( panel.grid.major.x = element_blank(),
+           panel.grid.minor.x = element_blank(),
+           panel.grid.major.y = element_blank(),
+           panel.grid.minor.y = element_blank(),
+           text = element_text(size=14), 
+           legend.background = element_blank(), 
+           legend.title = element_blank(), 
+           legend.key = element_blank()) +
+    ggtitle(title) + 
+    xlab (PCOA1) + 
+    ylab (PCOA2) + 
+    coord_fixed()
+  
+  return(pcoa_plot)
+}
+
+#Create condition comparision sections
+condition_section <- function(condition) {
+   condition <- str_split_fixed(condition, "_", 2)
+  
+   comp.table <- read.table(snakemake@input[["tables"]][i], header = T, row.names = 1)
+   comp.table.rev <- comp.table[rev(order(comp.table$log2FoldChange)), ]
+   genes.B <- comp.table[which(comp.table$padj < 0.01 & comp.table$log2FoldChange > 2), ]
+   genes.A <- comp.table[which(comp.table$padj < 0.01 & comp.table$log2FoldChange < -2), ]
+
+   # Build Section
+   pander::pandoc.header(paste('Comparison: ', 
+                               condition[1], 
+                               ' (+) vs. ', 
+                               condition[2], 
+                               ' (-)'), level = 2)
+   pander::pandoc.p('')
+   pander::pandoc.p(paste(nrow(genes.A), 'Targets differentially expressed under condition: ', condition[1], "(log2FoldChange > 2 and padj < 0.01)"))
+   pander::pandoc.p(paste(nrow(genes.B), 'Targets differentially expressed under condition: ', condition[2], "(log2FoldChange > 2 and padj < 0.01)"))
+   pander::pandoc.p('')
+   pander::pandoc.p('')
+   pander::pandoc.strong(paste('Volcano Plot for Comparison: ', condition[1], ' vs. ', condition[2]))
+   pander::pandoc.p('')
+   
+   #Volcano plots
+   EV.plot <- EnhancedVolcano(comp.table,
+                title = NULL,
+                subtitle = NULL,
+                lab = rownames(comp.table),
+                x = 'log2FoldChange',
+                y = 'pvalue', 
+                xlim = c(min(comp.table$log2FoldChange), max(comp.table$log2FoldChange)))
+   plot(EV.plot)
+   pander::pandoc.p('')
+   
+   pander::pandoc.header(paste('Top 20 targets in condition: ', condition[1]), level = 3)
+   pander::pandoc.table(head(comp.table.rev[c("baseMean",	"log2FoldChange", "padj")], 20))
+   pander::pandoc.p('')
+   pander::pandoc.header(paste('Top 20 targets in condition: ', condition[2]), level = 3)
+   pander::pandoc.table(head(comp.table[c("baseMean",	"log2FoldChange", "padj")], 20))
+   pander::pandoc.p('')
+   
+   i = i + 1
+}
+
+```
+
+```{r, echo=FALSE}
+# Data
+####################################################################
+#Load sample data
+all_conditions <- snakemake@params[["contrasts"]]
+sample_table <- read.table(snakemake@params[["data"]], header=TRUE, check.names=FALSE)
+
+#Load count data
+counts <- read.table(snakemake@input[["counts"]], header = T, sep="\t", row.names = 1)
+colnames(counts) <- str_split_fixed(colnames(counts), "_", 2)[,1]
+
+
+```
+
+# Project Configuration
+Project Name: `r print(snakemake@params[['PROJECT']])`
+
+Read Trimmer: `r {snakemake@params[["TRIMMER"]]}`
+
+Read Alignment: `r {snakemake@params[["ALIGNER"]]}`
+
+Quantification Method: `r {snakemake@params[["METHOD"]]}`
+
+Reference: `r {snakemake@params[["genome"]]}`
+
+# Sample Table
+```{r echo=FALSE}
+print(sample_table)
+```
+
+# Count Table
+```{r echo=FALSE}
+head(counts)
+```
+
+```{r echo=FALSE, message=FALSE}
+# Plot PCoA
+####################################################################
+
+#Calculate PCoA in vegan
+write("Calculating Principal Components (vegan::capscale)", stdout())
+pcoa <- capscale(t(counts) ~ 1, dist="bray")
+pcoa.plot <- plot_pcoa(pcoa, sample_table$Condition, "")
+```
+
+# Principal Component Analysis (PCoA)
+```{r echo=FALSE}
+pcoa.plot
+```
+
+# Differential Expression
+
+```{r, results='asis', echo=FALSE, message=FALSE, warning=FALSE}
+i = 1
+for(condition in all_conditions) {
+   condition_section(condition)
+}
+```
