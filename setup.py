@@ -18,7 +18,7 @@ setuptools.setup(
     package_data={'': [
             "Praxis/*",
                        ]},
-    data_files=[(".", ["README.md", "LICENSE.txt"])],
+    data_files=[(".", ["README.md", "LICENSE"])],
     include_package_data=True,
     install_requires= [
     ],
