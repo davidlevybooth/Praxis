@@ -49,6 +49,7 @@ def get_snakefile(file="Snakefile"):
 def main():
     # Define flags
     parser = argparse.ArgumentParser(description='pipeline configuration')
+    parser.add_argument("-n", "--snakefile", default = "./Snakefile", type = str, help = "Path to snakefile")
     parser.add_argument("-d", "--method", default = "salmon", type = str, help = "Either featureCounts, htseq, or salmon.")
     parser.add_argument("-a", "--aligner", default = "none", type = str, help = "Either bt2, bbmap, or none.")
     parser.add_argument("-q", "--trimmer", default = "trimmomatic", type = str, help = "Either trimmomatic, bbduk, or untrimmed.")
@@ -79,6 +80,11 @@ def main():
     # else:
     for arg in vars(args):
         if getattr(args, arg) is not None:
+            
+            if arg == "snakefile":
+                val = getattr(args, arg)
+                snakefile = val
+
             if arg == "method":
                 val = getattr(args, arg)
                 if val in ["featureCounts", "htseq", "salmon"]:
@@ -138,7 +144,7 @@ def main():
         "-j{jobs} --rerun-incomplete "
         "--configfile {configfile}"
     ).format(
-        snakefile=get_snakefile(),
+        snakefile=snakefile,
         jobs=jobs,
         configfile=configfile),
     logging.info("Executing: %s" % cmd)
