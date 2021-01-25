@@ -7,7 +7,7 @@ from pathlib import Path
 if ("sample_ids" in config):
     sample_ids = config["sample_ids"]
 else: 
-    reads = pd.read_csv('samples.tsv', delimiter = '\t')['Forward_Reads'].tolist() + pd.read_csv('samples.tsv', delimiter = '\t')['Reverse_Reads'].tolist()
+    reads = pd.read_csv(config["samples"], delimiter = '\t')['Forward_Reads'].tolist() + pd.read_csv(config["samples"], delimiter = '\t')['Reverse_Reads'].tolist()
     #path = os.getcwd() + sample_directory
     path = sample_directory
     for file in reads:
