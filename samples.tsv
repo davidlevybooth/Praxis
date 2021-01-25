@@ -1,4 +1,4 @@
-SRA	Sample	Condition	Forward_Reads	Reverse_Reads
+SRA	SampleID	Condition	Forward_Reads	Reverse_Reads
 EGfast-EG1	EGfast-EG1	Egfast-EG	EGfast-EG1_1.fastq	EGfast-EG1_2.fastq
 EGfast-EG2	EGfast-EG2	Egfast-EG	EGfast-EG2_1.fastq	EGfast-EG2_2.fastq
 EGfast-EG3	EGfast-EG3	Egfast-EG	EGfast-EG3_1.fastq	EGfast-EG3_2.fastq
